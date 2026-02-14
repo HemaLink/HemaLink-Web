@@ -1,0 +1,149 @@
+.donors-view {
+	padding: 16px;
+}
+
+.entities-view {
+	padding: 16px;
+}
+
+.donors-container {
+	padding: 12px;
+	margin: 0 24px;
+	overflow-x: auto
+}
+
+.donors-toolbar {
+	margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px
+}
+
+.toolbar-left {
+	display: flex;
+	align-items: center;
+	gap: 8px
+}
+
+.toolbar-right {
+	display: flex;
+	align-items: center
+}
+
+.sort-label {
+	font-size: 0.9rem
+}
+
+.donors-table {
+	width: calc(100vw - var(--sidebar-width, 250px) - 200px);
+	max-width: none;
+	min-width: 600px;
+	border-collapse: collapse;
+	background: var(--card-bg, #fff);
+}
+
+.donors-table th,
+.donors-table td {
+	padding: 8px 10px;
+	border-bottom: 1px solid var(--table-border);
+	text-align: left;
+	color: var(--text-color);
+}
+
+.donors-table thead {
+	background: var(--muted-bg);
+	color: var(--text-color);
+}
+
+.donors-table tr.muted {
+	opacity: 0.6;
+}
+
+.btn {
+	padding: 6px 10px;
+	border: 1px solid var(--btn-border);
+	background: transparent;
+	cursor: pointer;
+	border-radius: 4px;
+	margin-left: 6px
+}
+
+.btn.small {
+	padding: 4px 8px;
+	font-size: 0.9rem
+}
+
+.btn.primary {
+	background: var(--accent, #3b82f6);
+	color: #fff;
+	border-color: transparent
+}
+
+.btn.danger {
+	background: #ff4d4f;
+	color: #fff;
+	border-color: transparent
+}
+
+.modal {
+	background: #fff;
+	padding: 16px;
+	border-radius: 8px;
+	min-width: 320px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+}
+
+.modal {
+	background: #fff;
+	padding: 16px;
+	border-radius: 8px;
+	min-width: 320px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+}
+
+.donor-form {
+	display: flex;
+	flex-direction: column;
+	gap: 8px
+}
+
+.donor-form label {
+	display: flex;
+	flex-direction: column;
+	font-size: 0.9rem
+}
+
+.checkbox-label {
+	flex-direction: row;
+	align-items: center;
+	gap: 8px
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 8px
+}
+
+.modal .modal-content,
+.c-modal .modal-content {
+	background: var(--card-bg) !important;
+	color: var(--text-color) !important;
+	border: 1px solid var(--table-border) !important;
+}
+
+.modal .modal-content input,
+.modal .modal-content select,
+.modal .modal-content textarea {
+	background: var(--input-bg) !important;
+	color: var(--text-color) !important;
+	border: 1px solid var(--table-border) !important;
+	padding: 6px 8px;
+	border-radius: 4px;
+}
+
+.modal .modal-content label {
+	color: var(--text-color);
+}

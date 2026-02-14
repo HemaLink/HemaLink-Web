@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useContext } from "react";
 import ThemeContext from "../../../../services/themeContext/ThemeContext";
+import AuthContext from "../../../../services/authContext/AuthContext";
 import { THEME } from "../../../../services/themeContext/ThemeContext.const";
 import logo from "../../../../assets/hemalink_isotype.svg";
 
@@ -18,6 +19,7 @@ import CIcon from "@coreui/icons-react";
 import {
   cilDrop,
   cilUser,
+  cilPeople,
   cilHospital,
   cilCalendar,
   cilSettings,
@@ -28,6 +30,7 @@ import {
 
 const Sidebar = () => {
   const { theme, onChangeTheme } = useContext(ThemeContext);
+  const { isAuthenticated, setShowAuthModal, logout } = useContext(AuthContext);
   const handleToggleTheme = () => {
     onChangeTheme();
   };
@@ -59,30 +62,34 @@ const Sidebar = () => {
             Donations
           </NavLink>
         </CNavItem>
-        <CNavItem>
-          <NavLink to="/donors" className="nav-link">
-            <CIcon icon={cilUser} className="nav-icon" />
-            Donors
-          </NavLink>
-        </CNavItem>
-        <CNavItem>
-          <NavLink to="/entities" className="nav-link">
-            <CIcon icon={cilHospital} className="nav-icon" />
-            Entities
-          </NavLink>
-        </CNavItem>
-        <CNavItem>
-          <NavLink to="/appointments" className="nav-link">
-            <CIcon icon={cilCalendar} className="nav-icon" />
-            Appointments
-          </NavLink>
-        </CNavItem>
-        <CNavItem>
-          <NavLink to="/settings" className="nav-link">
-            <CIcon icon={cilSettings} className="nav-icon" />
-            Settings
-          </NavLink>
-        </CNavItem>
+        {isAuthenticated && (
+          <>
+            <CNavItem>
+              <NavLink to="/donors" className="nav-link">
+                <CIcon icon={cilPeople} className="nav-icon" />
+                Donors
+              </NavLink>
+            </CNavItem>
+            <CNavItem>
+              <NavLink to="/entities" className="nav-link">
+                <CIcon icon={cilHospital} className="nav-icon" />
+                Entities
+              </NavLink>
+            </CNavItem>
+            <CNavItem>
+              <NavLink to="/appointments" className="nav-link">
+                <CIcon icon={cilCalendar} className="nav-icon" />
+                Appointments
+              </NavLink>
+            </CNavItem>
+            <CNavItem>
+              <NavLink to="/settings" className="nav-link">
+                <CIcon icon={cilSettings} className="nav-icon" />
+                Settings
+              </NavLink>
+            </CNavItem>
+          </>
+        )}
       </CSidebarNav>
       <CSidebarFooter className="px-3 py-3">
         <div className="d-flex flex-column gap-2">
@@ -98,10 +105,27 @@ const Sidebar = () => {
             />
             {theme === THEME.DARK ? "Light Mode" : "Dark Mode"}
           </CNavLink>
-          <CNavLink href="#" className="nav-link footer-link text-danger">
-            <CIcon icon={cilAccountLogout} className="nav-icon me-2" />
-            Logout
-          </CNavLink>
+          {!isAuthenticated ? (
+            <CNavLink
+              onClick={() => setShowAuthModal(true)}
+              className="nav-link footer-link"
+              role="button"
+              style={{ cursor: "pointer" }}
+            >
+              <CIcon icon={cilUser} className="nav-icon me-2" />
+              Login
+            </CNavLink>
+          ) : (
+            <CNavLink
+              onClick={() => logout()}
+              className="nav-link footer-link text-danger"
+              role="button"
+              style={{ cursor: "pointer" }}
+            >
+              <CIcon icon={cilAccountLogout} className="nav-icon me-2" />
+              Logout
+            </CNavLink>
+          )}
         </div>
       </CSidebarFooter>
     </CSidebar>

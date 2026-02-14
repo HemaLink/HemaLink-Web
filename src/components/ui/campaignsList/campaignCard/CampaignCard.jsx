@@ -1,4 +1,5 @@
-import { Card, Button, Badge } from "react-bootstrap";
+import { Card, Button, Badge, Modal, Form } from "react-bootstrap";
+import React, { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { cilCalendar, cilLocationPin, cilDrop } from "@coreui/icons";
 import "./campaignCard.css";
@@ -12,6 +13,36 @@ const CampaignCard = ({
   units,
   status,
 }) => {
+  const [show, setShow] = useState(false);
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const openModal = () => setShow(true);
+  const closeModal = () => {
+    setShow(false);
+    setEmail("");
+    setFullName("");
+    setErrors({});
+  };
+
+  const validate = () => {
+    const e = {};
+    if (!fullName.trim()) e.fullName = "Full name is required";
+    if (!email.trim()) e.email = "Email is required";
+    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = "Email is invalid";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+    if (!validate()) return;
+    // TODO: send signup to backend (or other handling)
+    console.log("Donation signup", { campaignId: id, fullName, email });
+    alert("Thanks! You've been signed up to donate. (Demo)");
+    closeModal();
+  };
   const getStatusColor = (status) => {
     switch (status) {
       case "Open":
@@ -70,11 +101,73 @@ const CampaignCard = ({
           </div>
         </div>
         <div className="d-flex justify-content-end mt-auto">
-          <Button variant="outline-primary" size="sm" className="details-btn">
-            View Details
+          <Button
+            variant="outline-primary"
+            size="sm"
+            className="details-btn"
+            onClick={openModal}
+          >
+            I Want to Donate
           </Button>
         </div>
       </Card.Body>
+
+      <Modal show={show} onHide={closeModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Donate — {entityName}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="mb-3">
+            <strong>Location:</strong> {location}
+          </div>
+          <div
+            style={{ width: "100%", height: 200, background: "#eee" }}
+            className="mb-3 d-flex align-items-center justify-content-center"
+          >
+            {/* Google Maps integration to be implemented later */}
+            <span>Google Maps placeholder for: {location}</span>
+          </div>
+
+          <Form onSubmit={handleSubmit} noValidate>
+            <Form.Group className="mb-2" controlId="fullName">
+              <Form.Label>Full name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Your full name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                isInvalid={!!errors.fullName}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.fullName}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <Form.Group className="mb-2" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="name@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
+
+            <div className="d-flex justify-content-end mt-3">
+              <Button variant="secondary" onClick={closeModal} className="me-2">
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                Sign Up
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Card>
   );
 };

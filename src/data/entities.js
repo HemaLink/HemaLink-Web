@@ -1,0 +1,32 @@
+export const entities = [
+  {
+    id: 1,
+    name: 'City General Hospital',
+    type: 'Hospital',
+    contact: 'Dr. Laura Méndez',
+    phone: '+56 2 1234 5678',
+    address: 'Av. Central 123, Santiago',
+    createdAt: '2024-01-10',
+    isActive: true,
+  },
+  {
+    id: 2,
+    name: 'Northside Clinic',
+    type: 'Clinic',
+    contact: 'Mr. Carlos Ruiz',
+    phone: '+56 9 9876 5432',
+    address: 'Calle Norte 45, Valparaíso',
+    createdAt: '2024-03-05',
+    isActive: true,
+  },
+  {
+    id: 3,
+    name: 'St. Mary Center',
+    type: 'Blood Bank',
+    contact: 'Ana Torres',
+    phone: '+56 2 3344 5566',
+    address: 'Plaza 7, Concepción',
+    createdAt: '2023-11-21',
+    isActive: false,
+  },
+];

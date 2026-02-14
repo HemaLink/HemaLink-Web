@@ -21,9 +21,9 @@ const ThemeContextProvider = ({ children }) => {
   };
 
   return (
-    <ThemeContext value={{ theme, onChangeTheme: handleToggleTheme }}>
+    <ThemeContext.Provider value={{ theme, onChangeTheme: handleToggleTheme }}>
       {children}
-    </ThemeContext>
+    </ThemeContext.Provider>
   );
 };
 

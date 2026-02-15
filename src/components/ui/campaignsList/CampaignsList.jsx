@@ -31,7 +31,7 @@ const CampaignsList = () => {
     ));
 
   return (
-    <div className="mt-2 mx-4">
+    <div className="mt-2 mx-4 campaigns-list-wrapper">
       <h1>Donations</h1>
       <CampaignSearch onSearch={handleSearchChange} search={search} />
       <hr />
@@ -41,8 +41,9 @@ const CampaignsList = () => {
           overflowY: "auto",
           paddingRight: "0.5rem",
         }}
+        className="campaigns-list-section"
       >
-        <div className="d-flex flex-wrap gap-4">
+        <div className="d-flex flex-wrap gap-4 campaigns-list-container">
           {mappedCampaigns.length ? (
             mappedCampaigns
           ) : (

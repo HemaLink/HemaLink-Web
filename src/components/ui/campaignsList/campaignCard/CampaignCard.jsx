@@ -38,7 +38,6 @@ const CampaignCard = ({
   const handleSubmit = (ev) => {
     ev.preventDefault();
     if (!validate()) return;
-    // TODO: send signup to backend (or other handling)
     console.log("Donation signup", { campaignId: id, fullName, email });
     alert("Thanks! You've been signed up to donate. (Demo)");
     closeModal();
@@ -73,7 +72,6 @@ const CampaignCard = ({
   return (
     <Card
       key={id}
-      style={{ width: "18vw", height: "18vw" }}
       className="d-flex flex-column campaign-card"
     >
       <Card.Body className="d-flex flex-column flex-grow-1">
@@ -124,7 +122,6 @@ const CampaignCard = ({
             style={{ width: "100%", height: 200, background: "#eee" }}
             className="mb-3 d-flex align-items-center justify-content-center"
           >
-            {/* Google Maps integration to be implemented later */}
             <span>Google Maps placeholder for: {location}</span>
           </div>
 

@@ -1,0 +1,206 @@
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0;
+  border-top: 1px solid;
+  background-color: var(--card-bg, #ffffff);
+  z-index: 1000;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-bs-theme="light"] .bottom-nav-bar {
+  border-top-color: #e6e6e6;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar {
+  border-top-color: #2b2b2b;
+}
+
+.bottom-nav-bar .nav-items {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  align-items: stretch;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
+.bottom-nav-bar .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 6px 4px;
+  border-radius: 0;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  color: var(--text-color, #212529);
+  position: relative;
+  min-height: 60px;
+  max-width: 80px;
+}
+
+.bottom-nav-bar .nav-item:hover {
+  background-color: var(--muted-bg, #f7f7f7);
+  transform: none;
+}
+
+.bottom-nav-bar .nav-item.active {
+  background-color: var(--muted-bg, #f7f7f7);
+}
+
+.bottom-nav-bar .nav-item.active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #38c172;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-item {
+  color: #f8f9fa;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-item:hover {
+  background-color: #2c2c3c;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-item.active {
+  background-color: #2c2c3c;
+}
+
+.bottom-nav-bar .nav-icon {
+  font-size: 20px;
+  margin-bottom: 2px;
+  color: var(--text-color, #212529) !important;
+  fill: var(--text-color, #212529) !important;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-icon {
+  color: #f8f9fa !important;
+  fill: #f8f9fa !important;
+}
+
+.bottom-nav-bar .nav-label {
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.bottom-nav-bar .nav-actions {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  border-left: 1px solid;
+  height: 60px;
+}
+
+:root[data-bs-theme="light"] .bottom-nav-bar .nav-actions {
+  border-left-color: #e6e6e6;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-actions {
+  border-left-color: #2b2b2b;
+}
+
+.bottom-nav-bar .nav-action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 50px;
+  padding: 8px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-color, #212529);
+  min-height: 60px;
+}
+
+.bottom-nav-bar .nav-action-button:hover {
+  background-color: var(--muted-bg, #f7f7f7);
+  transform: none;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-action-button {
+  color: #f8f9fa;
+}
+
+:root[data-bs-theme="dark"] .bottom-nav-bar .nav-action-button:hover {
+  background-color: #2c2c3c;
+}
+
+.bottom-nav-bar .logout-button:hover .nav-icon {
+  color: #dc3545 !important;
+  fill: #dc3545 !important;
+}
+
+@media (max-width: 480px) {
+  .bottom-nav-bar {
+    height: 56px;
+  }
+  
+  .bottom-nav-bar .nav-item {
+    min-height: 56px;
+    max-width: 70px;
+    padding: 4px 2px;
+  }
+  
+  .bottom-nav-bar .nav-icon {
+    font-size: 18px;
+    margin-bottom: 1px;
+  }
+  
+  .bottom-nav-bar .nav-label {
+    font-size: 9px;
+  }
+  
+  .bottom-nav-bar .nav-action-button {
+    min-height: 56px;
+    flex: 0 0 48px;
+  }
+}
+
+@media (max-width: 375px) {
+  .bottom-nav-bar {
+    height: 52px;
+  }
+  
+  .bottom-nav-bar .nav-item {
+    min-height: 52px;
+    max-width: 65px;
+    padding: 3px 2px;
+  }
+  
+  .bottom-nav-bar .nav-icon {
+    font-size: 16px;
+    margin-bottom: 1px;
+  }
+  
+  .bottom-nav-bar .nav-label {
+    font-size: 8px;
+    line-height: 1;
+  }
+  
+  .bottom-nav-bar .nav-action-button {
+    min-height: 52px;
+    flex: 0 0 44px;
+  }
+}

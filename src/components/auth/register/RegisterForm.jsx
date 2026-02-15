@@ -11,7 +11,6 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    // Fake register: do nothing (admin is the only real user)
     setSuccess("Registration successful. You may now sign in (admin/admin).");
     setTimeout(() => setModalView("login"), 1200);
   };

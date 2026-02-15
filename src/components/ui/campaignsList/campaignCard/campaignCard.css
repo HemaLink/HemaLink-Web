@@ -1,24 +1,28 @@
 .campaign-card {
   transition: box-shadow 0.3s ease;
+  width: 100%;
+  height: auto;
+  min-height: 240px;
 }
 
 .campaign-card:hover {
-  box-shadow: 0 0 0.625vw rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
 }
 
 :root[data-bs-theme="dark"] .campaign-card:hover {
-  box-shadow: 0 0 0.625vw rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
 }
 
 .details-btn {
   color: #ff6961 !important;
-  border: 0.052vw solid #ff6961 !important;
+  border: 1px solid #ff6961 !important;
+  white-space: nowrap;
 }
 
 .details-btn:hover {
   background-color: #ff6961 !important;
   color: #fff !important;
-  border: 0.052vw solid #ff6961 !important;
+  border: 1px solid #ff6961 !important;
 }
 
 .bloodtype-font {
@@ -26,4 +30,30 @@
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+
+@media (min-width: 1024px) {
+  .campaign-card {
+    width: 18vw;
+    height: 18vw;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .campaign-card {
+    width: calc(50% - 12px);
+  }
+}
+
+@media (max-width: 767px) {
+  .campaign-card {
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+  }
+  
+  .campaign-card .details-btn {
+    width: 100%;
+    margin-top: 8px;
+  }
 }

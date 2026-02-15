@@ -107,3 +107,61 @@
   color: var(--text-color) !important;
   border-color: var(--table-border) !important;
 }
+
+@media (max-width: 767px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .app-content {
+    flex: 1;
+    padding-bottom: 78px;
+    overflow-y: auto;
+    width: 100%;
+  }
+  
+  body {
+    overflow: hidden;
+  }
+  
+  .campaigns-list-wrapper {
+    margin: 0 !important;
+    padding: 8px !important;
+  }
+  
+  .campaigns-list-wrapper h1 {
+    font-size: 1.5rem;
+    margin: 12px 0 8px 0;
+  }
+  
+  .campaigns-list-section {
+    max-height: calc(100dvh - 200px) !important;
+  }
+  
+  .campaigns-list-container {
+    gap: 12px !important;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
+  .campaigns-list-container {
+    gap: 16px !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .app-content {
+    flex: 1;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .campaigns-list-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0;
+  }
+}

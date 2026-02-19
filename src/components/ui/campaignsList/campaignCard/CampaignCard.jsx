@@ -98,16 +98,19 @@ const CampaignCard = ({
             {units}
           </div>
         </div>
-        <div className="d-flex justify-content-end mt-auto">
-          <Button
-            variant="outline-primary"
-            size="sm"
-            className="details-btn"
-            onClick={openModal}
-          >
-            I Want to Donate
-          </Button>
-        </div>
+        {/* Only show donation button if not admin */}
+        {!(window.localStorage.getItem("hemalink-auth") && JSON.parse(window.localStorage.getItem("hemalink-auth")).role === "Admin") && (
+          <div className="d-flex justify-content-end mt-auto">
+            <Button
+              variant="outline-primary"
+              size="sm"
+              className="details-btn"
+              onClick={openModal}
+            >
+              I Want to Donate
+            </Button>
+          </div>
+        )}
       </Card.Body>
 
       <Modal show={show} onHide={closeModal} centered>

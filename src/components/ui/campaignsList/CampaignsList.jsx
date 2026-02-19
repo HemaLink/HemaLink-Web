@@ -1,15 +1,29 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { campaigns } from "../../../data/campaigns.js";
 import CampaignCard from "./campaignCard/CampaignCard.jsx";
 import CampaignSearch from "./CampaignSearch.jsx";
+import CampaignsTable from "./CampaignsTable.jsx";
+import AuthContext from "../../../services/authContext/AuthContext";
 
 const CampaignsList = () => {
   const [search, setSearch] = useState("");
+  const { user } = useContext(AuthContext);
 
   const handleSearchChange = (searchValue) => {
     setSearch(searchValue);
   };
 
+  // If admin, show CRUD table
+  if (user && user.role === "Admin") {
+    return (
+      <div className="mt-2 mx-4 campaigns-list-wrapper">
+        <h1>Campaigns</h1>
+        <CampaignsTable />
+      </div>
+    );
+  }
+
+  // Otherwise, show campaign cards (with donation option)
   const mappedCampaigns = campaigns
     .filter((campaign) => {
       const query = search.toLowerCase();

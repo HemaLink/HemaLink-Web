@@ -28,12 +28,43 @@ const AuthContextProvider = ({ children }) => {
       setTimeout(() => window.location.reload(), 100);
       return { ok: true };
     }
-    return { ok: false, message: "Invalid credentials" };
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usernameOrEmail, password }),
+      });
+
+      const data = await res.json().catch(() => null);
+      if (res.ok) {
+        setUser(data?.user || data);
+        setShowAuthModal(false);
+        return { ok: true, data };
+      }
+      return { ok: false, message: data?.message || data?.error || "Invalid credentials" };
+    } catch (err) {
+      return { ok: false, message: err.message || "Network error" };
+    }
   };
 
   const logout = () => {
     setUser(null);
     setTimeout(() => window.location.reload(), 100);
+  };
+
+  const register = async (name, email, password) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register-requester`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok) return { ok: true, data };
+      return { ok: false, message: data?.message || data?.error || "Registration failed" };
+    } catch (err) {
+      return { ok: false, message: err.message || "Network error" };
+    }
   };
 
   return (
@@ -42,6 +73,7 @@ const AuthContextProvider = ({ children }) => {
         user,
         isAuthenticated: !!user,
         login,
+        register,
         logout,
         showAuthModal,
         setShowAuthModal,

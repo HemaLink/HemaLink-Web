@@ -7,12 +7,20 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(null);
-  const { setModalView } = useContext(AuthContext);
+  const [error, setError] = useState(null);
+  const { setModalView, register } = useContext(AuthContext);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    setSuccess("Registration successful. You may now sign in (admin/admin).");
-    setTimeout(() => setModalView("login"), 1200);
+    setError(null);
+    setSuccess(null);
+    const res = await register(name, email, password);
+    if (res.ok) {
+      setSuccess("Registration successful. You may now sign in.");
+      setTimeout(() => setModalView("login"), 1200);
+    } else {
+      setError(res.message || "Registration failed");
+    }
   };
 
   return (

@@ -13,7 +13,6 @@ const CampaignsList = () => {
     setSearch(searchValue);
   };
 
-  // If admin, show CRUD table
   if (user && user.role === "Admin") {
     return (
       <div className="mt-2 mx-4 campaigns-list-wrapper">
@@ -23,7 +22,6 @@ const CampaignsList = () => {
     );
   }
 
-  // Otherwise, show campaign cards (with donation option)
   const mappedCampaigns = campaigns
     .filter((campaign) => {
       const query = search.toLowerCase();

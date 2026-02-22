@@ -47,7 +47,7 @@ const DonorForm = ({ initial = null, onSave, onClose, visible = true }) => {
   return (
     <CModal visible={visible} onClose={onClose} backdrop>
       <CModalHeader>
-        <CModalTitle>{form.id ? 'Edit Donor' : 'Add Donor'}</CModalTitle>
+        <CModalTitle>Edit Donor</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <form onSubmit={submit} className="donor-form">

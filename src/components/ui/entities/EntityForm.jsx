@@ -47,7 +47,7 @@ const EntityForm = ({ initial = null, onSave, onClose, visible = true }) => {
   return (
     <CModal visible={visible} onClose={onClose} backdrop>
       <CModalHeader>
-        <CModalTitle>{form.id ? 'Edit Entity' : 'Add Entity'}</CModalTitle>
+        <CModalTitle>Edit Entity</CModalTitle>
       </CModalHeader>
       <CModalBody>
         <form onSubmit={submit} className="donor-form">

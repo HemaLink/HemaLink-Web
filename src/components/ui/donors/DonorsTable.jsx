@@ -14,11 +14,6 @@ const DonorsTable = () => {
   const [showForm, setShowForm] = useState(false);
   const [sortMode, setSortMode] = useState('name-asc');
 
-  const handleAdd = () => {
-    setEditing(null);
-    setShowForm(true);
-  };
-
   const handleEdit = (donor) => {
     setEditing(donor);
     setShowForm(true);
@@ -41,12 +36,7 @@ const DonorsTable = () => {
   };
 
   const handleSave = (donor) => {
-    if (donor.id) {
-      setDonors((d) => d.map((x) => (x.id === donor.id ? donor : x)));
-    } else {
-      const nextId = donors.length ? Math.max(...donors.map((d) => d.id)) + 1 : 1;
-      setDonors((d) => [...d, { ...donor, id: nextId }]);
-    }
+    setDonors((d) => d.map((x) => (x.id === donor.id ? donor : x)));
     setShowForm(false);
   };
 
@@ -78,11 +68,7 @@ const DonorsTable = () => {
             <option value="date-old">Date (old → new)</option>
           </select>
         </div>
-        <div className="toolbar-right">
-          <button className="btn primary" onClick={handleAdd}>
-            + Add Donor
-          </button>
-        </div>
+
       </div>
 
       <table className="donors-table">

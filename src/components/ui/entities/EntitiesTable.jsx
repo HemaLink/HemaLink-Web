@@ -17,11 +17,6 @@ const EntitiesTable = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
 
-  const handleAdd = () => {
-    setEditing(null);
-    setShowForm(true);
-  };
-
   const handleEdit = (item) => {
     setEditing(item);
     setShowForm(true);
@@ -41,12 +36,7 @@ const EntitiesTable = () => {
   };
 
   const handleSave = (entity) => {
-    if (entity.id) {
-      setItems((d) => d.map((x) => (x.id === entity.id ? entity : x)));
-    } else {
-      const nextId = items.length ? Math.max(...items.map((d) => d.id)) + 1 : 1;
-      setItems((d) => [...d, { ...entity, id: nextId }]);
-    }
+    setItems((d) => d.map((x) => (x.id === entity.id ? entity : x)));
     setShowForm(false);
   };
 
@@ -78,11 +68,7 @@ const EntitiesTable = () => {
             <option value="date-old">Date (old → new)</option>
           </select>
         </div>
-        <div className="toolbar-right">
-          <button className="btn primary" onClick={handleAdd}>
-            + Add Entity
-          </button>
-        </div>
+
       </div>
 
       <table className="donors-table">

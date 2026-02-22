@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from "react";
+import '../donors/donors.css';
+import DeleteConfirm from '../donors/DeleteConfirm';
 import { campaigns as initial } from "../../../data/campaigns";
 
 const CampaignsTable = () => {
@@ -59,8 +61,8 @@ const CampaignsTable = () => {
   }, [campaigns, sortMode]);
 
   return (
-    <div className="campaigns-table-container">
-      <div className="campaigns-toolbar">
+    <div className="donors-container">
+      <div className="donors-toolbar">
         <div className="toolbar-left">
           <label className="sort-label">Sort:</label>
           <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
@@ -76,7 +78,7 @@ const CampaignsTable = () => {
           </button>
         </div>
       </div>
-      <table className="table table-striped">
+      <table className="donors-table">
         <thead>
           <tr>
             <th>Entity</th>
@@ -98,10 +100,10 @@ const CampaignsTable = () => {
               <td>{c.units}</td>
               <td>{c.status}</td>
               <td>
-                <button className="btn btn-sm btn-secondary me-2" onClick={() => handleEdit(c)}>
+                <button className="btn small" onClick={() => handleEdit(c)}>
                   Edit
                 </button>
-                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(c.id)}>
+                <button className="btn small danger" onClick={() => handleDelete(c.id)}>
                   Delete
                 </button>
               </td>
@@ -109,6 +111,13 @@ const CampaignsTable = () => {
           ))}
         </tbody>
       </table>
+
+      <DeleteConfirm
+        visible={showDelete}
+        onClose={() => setShowDelete(false)}
+        onConfirm={confirmDelete}
+        itemName={deleteTarget ? deleteTarget.entityName : 'this campaign'}
+      />
     </div>
   );
 };

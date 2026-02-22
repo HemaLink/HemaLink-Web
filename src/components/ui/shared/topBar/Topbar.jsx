@@ -9,27 +9,17 @@ const Topbar = () => {
   const handleToggleTheme = () => onChangeTheme();
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "1rem",
-        right: "1rem",
-        zIndex: 2000,
-        display: "flex",
-        gap: "0.5rem",
-        alignItems: "center",
-      }}
-    >
+    <div className="topbar">
       <button
         type="button"
-        className="btn btn-outline-secondary"
+        className="btn btn-outline-secondary btn-sm"
         onClick={handleToggleTheme}
       >
         {theme === "dark" ? "Light Mode" : "Dark Mode"}
       </button>
       <button
         type="button"
-        className="btn btn-primary"
+        className="btn btn-primary btn-sm"
         onClick={() => setShowAuthModal(true)}
       >
         Login

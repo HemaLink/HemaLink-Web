@@ -97,12 +97,12 @@ const CampaignsTable = () => {
         <tbody>
           {sorted.map((c) => (
             <tr key={c.id}>
-              <td>{c.entityName}</td>
-              <td>{c.bloodType}</td>
-              <td>{c.date}</td>
-              <td>{c.location}</td>
-              <td>{c.units}</td>
-              <td>{c.status}</td>
+              <td data-label="Entity">{c.entityName}</td>
+              <td data-label="Blood Type">{c.bloodType}</td>
+              <td data-label="Date">{c.date}</td>
+              <td data-label="Location">{c.location}</td>
+              <td data-label="Units">{c.units}</td>
+              <td data-label="Status">{c.status}</td>
               <td>
                 <button className="btn small" onClick={() => handleEdit(c)}>
                   Edit

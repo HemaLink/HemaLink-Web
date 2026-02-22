@@ -8,11 +8,11 @@ import Topbar from "./shared/topBar/Topbar";
 
 const Dashboard = () => {
   const { isAuthenticated } = useContext(AuthContext);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 992);
     };
 
     window.addEventListener("resize", handleResize);
@@ -24,7 +24,7 @@ const Dashboard = () => {
       <AuthModal />
       {isAuthenticated && isMobile ? (
         <>
-          <section className="app-content">
+          <section className="app-content has-bottom-nav">
             <Outlet />
           </section>
           <BottomNavBar />

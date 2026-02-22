@@ -116,9 +116,9 @@ const ModeratorsTable = () => {
         <tbody>
           {moderators.map((m) => (
             <tr key={m.id}>
-              <td>{m.id}</td>
-              <td>{m.name}</td>
-              <td>{m.email}</td>
+              <td data-label="ID">{m.id}</td>
+              <td data-label="Name">{m.name}</td>
+              <td data-label="Email">{m.email}</td>
               <td>
                 <button className="btn small" onClick={() => handlePromote(m)}>
                   Promote

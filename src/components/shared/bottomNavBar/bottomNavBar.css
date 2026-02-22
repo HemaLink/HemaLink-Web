@@ -7,11 +7,13 @@
   justify-content: space-between;
   align-items: center;
   height: 60px;
+  max-height: 60px;
   padding: 0;
   border-top: 1px solid;
   background-color: var(--card-bg, #ffffff);
   z-index: 1000;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 :root[data-bs-theme="light"] .bottom-nav-bar {
@@ -40,12 +42,15 @@
   padding: 6px 4px;
   border-radius: 0;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
   cursor: pointer;
   color: var(--text-color, #212529);
   position: relative;
   min-height: 60px;
+  max-height: 60px;
   max-width: 80px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .bottom-nav-bar .nav-item:hover {
@@ -109,6 +114,7 @@
   padding: 0;
   border-left: 1px solid;
   height: 60px;
+  overflow: hidden;
 }
 
 :root[data-bs-theme="light"] .bottom-nav-bar .nav-actions {
@@ -129,9 +135,12 @@
   border: none;
   border-radius: 0;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
   color: var(--text-color, #212529);
   min-height: 60px;
+  max-height: 60px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .bottom-nav-bar .nav-action-button:hover {

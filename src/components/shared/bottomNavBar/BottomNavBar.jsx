@@ -12,7 +12,6 @@ import {
   cilPeople,
   cilHospital,
   cilCalendar,
-  cilSettings,
   cilAccountLogout,
   cilMoon,
   cilSun,
@@ -70,12 +69,12 @@ const BottomNavBar = () => {
         )}
         {isAuthenticated && role >= ROLES.ADMIN && (
           <NavLink
-            to="/settings"
+            to="/moderators"
             className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-            title="Settings"
+            title="Moderators"
           >
-            <CIcon icon={cilSettings} className="nav-icon" />
-            <span className="nav-label">Settings</span>
+            <CIcon icon={cilPeople} className="nav-icon" />
+            <span className="nav-label">Moderators</span>
           </NavLink>
         )}
       </div>

@@ -87,13 +87,13 @@ const DonorsTable = () => {
         <tbody>
           {sorted.map((d) => (
             <tr key={d.id} className={d.isActive ? '' : 'muted'}>
-              <td>{d.id}</td>
-              <td>{d.name}</td>
-              <td>{d.email}</td>
-              <td>{d.phone}</td>
-              <td>{d.bloodType}</td>
-              <td>{d.lastDonation}</td>
-              <td>{d.isActive ? 'Yes' : 'No'}</td>
+              <td data-label="ID">{d.id}</td>
+              <td data-label="Name">{d.name}</td>
+              <td data-label="Email">{d.email}</td>
+              <td data-label="Phone">{d.phone}</td>
+              <td data-label="Blood">{d.bloodType}</td>
+              <td data-label="Last Donation">{d.lastDonation}</td>
+              <td data-label="Active">{d.isActive ? 'Yes' : 'No'}</td>
               <td>
                 <button className="btn small" onClick={() => handleEdit(d)}>
                   Edit

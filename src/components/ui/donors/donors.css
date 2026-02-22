@@ -149,97 +149,122 @@
 }
 
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
 	.donors-container {
 		margin: 0;
 		padding: 8px;
 		overflow-x: visible;
 	}
-	
+
 	.donors-toolbar {
 		flex-direction: column;
-		align-items: flex-start;
-		gap: 12px;
+		align-items: stretch;
+		gap: 8px;
 		margin-bottom: 12px;
 	}
-	
+
 	.toolbar-left {
 		width: 100%;
 	}
-	
+
 	.toolbar-left select {
-		width: 100%;
-		padding: 8px;
-		font-size: 1rem;
+		width: auto;
+		padding: 6px 8px;
+		font-size: 0.85rem;
 	}
-	
+
 	.toolbar-right {
 		width: 100%;
 	}
-	
+
 	.toolbar-right .btn {
 		width: 100%;
-		padding: 8px;
-		font-size: 1rem;
+		padding: 10px;
+		font-size: 0.95rem;
 	}
-	
+
 	.donors-table {
+		display: block;
 		width: 100%;
-		max-width: 100%;
-		display: table;
-		border-collapse: collapse;
-		background: var(--card-bg, #fff);
-		overflow-x: auto;
+		min-width: 0 !important;
+		border-collapse: separate;
+		border-spacing: 0;
 	}
-	
+
 	.donors-table thead {
-		display: table-header-group;
-		background: var(--muted-bg);
-		position: sticky;
-		top: 0;
-		z-index: 10;
-		width: 100%;
+		display: none;
 	}
-	
+
 	.donors-table tbody {
-		display: table-row-group;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 	}
-	
+
 	.donors-table tr {
-		display: table-row;
-		width: 100%;
+		display: flex;
+		flex-direction: column;
+		background: var(--card-bg, #fff);
+		border: 1px solid var(--table-border);
+		border-radius: 8px;
+		padding: 12px;
+		gap: 4px;
 	}
-	
-	.donors-table th,
+
+	.donors-table tr.muted {
+		opacity: 0.6;
+	}
+
 	.donors-table td {
-		padding: 8px 6px;
-		font-size: 0.75rem;
-		text-align: left;
-		color: var(--text-color);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 4px 0;
 		border-bottom: 1px solid var(--table-border);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		max-width: 60px;
+		font-size: 0.9rem;
+		color: var(--text-color);
+		max-width: none;
+		white-space: normal;
+		word-break: break-word;
 	}
-	
-	.donors-table th:last-child,
+
 	.donors-table td:last-child {
-		max-width: 90px;
+		border-bottom: none;
+		justify-content: flex-end;
+		gap: 6px;
+		padding-top: 8px;
+		flex-wrap: wrap;
 	}
-	
-	.donors-table td:nth-child(2) {
-		max-width: 80px;
+
+	.donors-table td::before {
+		content: attr(data-label);
+		font-weight: 600;
+		font-size: 0.8rem;
+		color: var(--text-color);
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		min-width: 0;
+		margin-right: 8px;
+		flex-shrink: 0;
 	}
-	
+
+	.donors-table td:last-child::before {
+		display: none;
+	}
+
 	.btn.small {
-		padding: 4px 6px;
-		font-size: 0.7rem;
-		margin-left: 2px;
-		margin-bottom: 2px;
+		padding: 6px 12px;
+		font-size: 0.85rem;
+		margin-left: 0;
 	}
-	
-	.donors-container > .donors-table {
-		min-width: 600px;
+
+	.mt-2.mx-4 {
+		margin: 0 !important;
+		padding: 8px 12px;
+	}
+
+	.mt-2.mx-4 > h1 {
+		font-size: 1.4rem;
+		margin-bottom: 4px;
 	}
 }

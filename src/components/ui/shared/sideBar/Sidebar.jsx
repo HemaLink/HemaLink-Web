@@ -23,7 +23,6 @@ import {
   cilPeople,
   cilHospital,
   cilCalendar,
-  cilSettings,
   cilAccountLogout,
   cilMoon,
   cilSun,
@@ -88,20 +87,12 @@ const Sidebar = () => {
           </>
         )}
         {isAuthenticated && role >= ROLES.ADMIN && (
-          <>
-            <CNavItem>
-              <NavLink to="/moderators" className="nav-link">
-                <CIcon icon={cilPeople} className="nav-icon" />
-                Moderators
-              </NavLink>
-            </CNavItem>
-            <CNavItem>
-              <NavLink to="/settings" className="nav-link">
-                <CIcon icon={cilSettings} className="nav-icon" />
-                Settings
-              </NavLink>
-            </CNavItem>
-          </>
+          <CNavItem>
+            <NavLink to="/moderators" className="nav-link">
+              <CIcon icon={cilPeople} className="nav-icon" />
+              Moderators
+            </NavLink>
+          </CNavItem>
         )}
       </CSidebarNav>
       <CSidebarFooter className="px-3 py-3">

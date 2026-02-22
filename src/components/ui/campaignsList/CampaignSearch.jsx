@@ -6,7 +6,7 @@ const CampaignSearch = ({ onSearch, search }) => {
   };
 
   return (
-    <Form.Group className="mt-4 mb-2 w-50" controlId="searchCampaign">
+    <Form.Group className="mt-4 mb-2 campaign-search-group" controlId="searchCampaign">
       <Form.Control
         type="text"
         placeholder="Find campaigns..."

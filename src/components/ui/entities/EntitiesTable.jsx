@@ -88,14 +88,14 @@ const EntitiesTable = () => {
         <tbody>
           {sorted.map((e) => (
             <tr key={e.id} className={e.isActive ? '' : 'muted'}>
-              <td>{e.id}</td>
-              <td>{e.name}</td>
-              <td>{e.type}</td>
-              <td>{e.contact}</td>
-              <td>{e.phone}</td>
-              <td>{e.address}</td>
-              <td>{e.createdAt}</td>
-              <td>{e.isActive ? 'Yes' : 'No'}</td>
+              <td data-label="ID">{e.id}</td>
+              <td data-label="Name">{e.name}</td>
+              <td data-label="Type">{e.type}</td>
+              <td data-label="Contact">{e.contact}</td>
+              <td data-label="Phone">{e.phone}</td>
+              <td data-label="Address">{e.address}</td>
+              <td data-label="Created">{e.createdAt}</td>
+              <td data-label="Active">{e.isActive ? 'Yes' : 'No'}</td>
               <td>
                 <button className="btn small" onClick={() => handleEdit(e)}>
                   Edit

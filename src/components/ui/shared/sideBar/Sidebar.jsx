@@ -29,6 +29,8 @@ import {
   cilSun,
 } from "@coreui/icons";
 
+const ROLE_LABELS = { 0: 'User', 1: 'Mod', 2: 'Admin' };
+
 const Sidebar = () => {
   const { theme, onChangeTheme } = useContext(ThemeContext);
   const { isAuthenticated, role, setShowAuthModal, logout } = useContext(AuthContext);
@@ -86,16 +88,29 @@ const Sidebar = () => {
           </>
         )}
         {isAuthenticated && role >= ROLES.ADMIN && (
-          <CNavItem>
-            <NavLink to="/settings" className="nav-link">
-              <CIcon icon={cilSettings} className="nav-icon" />
-              Settings
-            </NavLink>
-          </CNavItem>
+          <>
+            <CNavItem>
+              <NavLink to="/moderators" className="nav-link">
+                <CIcon icon={cilPeople} className="nav-icon" />
+                Moderators
+              </NavLink>
+            </CNavItem>
+            <CNavItem>
+              <NavLink to="/settings" className="nav-link">
+                <CIcon icon={cilSettings} className="nav-icon" />
+                Settings
+              </NavLink>
+            </CNavItem>
+          </>
         )}
       </CSidebarNav>
       <CSidebarFooter className="px-3 py-3">
         <div className="d-flex flex-column gap-2">
+          {isAuthenticated && (
+            <div className="nav-link" style={{ fontSize: '0.85rem', cursor: 'default' }}>
+              <strong>Type:</strong> {ROLE_LABELS[role] ?? 'Unknown'}
+            </div>
+          )}
           <CNavLink
             onClick={handleToggleTheme}
             className="nav-link footer-link"

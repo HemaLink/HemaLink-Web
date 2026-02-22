@@ -1,15 +1,17 @@
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/react';
 
-const DeleteConfirm = ({ visible = false, onClose, onConfirm, itemName = 'this item' }) => {
+const PromoteConfirm = ({ visible = false, onClose, onConfirm, moderatorName = 'this moderator' }) => {
   return (
     <CModal visible={visible} onClose={onClose} backdrop>
       <CModalHeader>
-        <CModalTitle>Confirm Delete</CModalTitle>
+        <CModalTitle>Promote to Admin</CModalTitle>
       </CModalHeader>
-      <CModalBody>Are you sure you want to delete {itemName}?</CModalBody>
+      <CModalBody>
+        Are you sure you want to promote <strong>{moderatorName}</strong> to Admin?
+      </CModalBody>
       <CModalFooter>
-        <CButton color="danger" onClick={onConfirm}>
-          Delete
+        <CButton color="warning" onClick={onConfirm}>
+          Promote
         </CButton>
         <CButton color="secondary" onClick={onClose}>
           Cancel
@@ -19,4 +21,4 @@ const DeleteConfirm = ({ visible = false, onClose, onConfirm, itemName = 'this i
   );
 };
 
-export default DeleteConfirm;
+export default PromoteConfirm;

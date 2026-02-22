@@ -5,6 +5,7 @@ import CampaignsList from "./components/ui/campaignsList/CampaignsList";
 import Donors from "./components/ui/donors/Donors";
 import Entities from "./components/ui/entities/Entities";
 import Appointments from "./components/ui/appointments/Appointments";
+import Moderators from "./components/ui/moderators/Moderators";
 import NotFound from "./routes/notFound/NotFound";
 import Protected from "./routes/protected/Protected";
 
@@ -19,6 +20,7 @@ function App() {
               <Route path="/donors" element={<Donors />} />
               <Route path="/entities" element={<Entities />} />
               <Route path="/appointments" element={<Appointments />} />
+              <Route path="/moderators" element={<Moderators />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFound />} />

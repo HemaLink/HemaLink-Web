@@ -6,6 +6,7 @@ import Donors from "./components/ui/donors/Donors";
 import Entities from "./components/ui/entities/Entities";
 import Appointments from "./components/ui/appointments/Appointments";
 import NotFound from "./routes/notFound/NotFound";
+import Protected from "./routes/protected/Protected";
 
 function App() {
   return (
@@ -14,9 +15,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />}>
             <Route index element={<CampaignsList />} />
-            <Route path="/donors" element={<Donors />} />
-            <Route path="/entities" element={<Entities />} />
-            <Route path="/appointments" element={<Appointments />} />
+            <Route element={<Protected />}>
+              <Route path="/donors" element={<Donors />} />
+              <Route path="/entities" element={<Entities />} />
+              <Route path="/appointments" element={<Appointments />} />
+            </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

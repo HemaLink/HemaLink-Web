@@ -43,6 +43,7 @@ const CampaignCard = ({
     if (!email.trim()) e.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Please enter a valid email address";
     if (!phone.trim()) e.phone = "Phone is required";
+    else if (!/^\d+$/.test(phone.trim())) e.phone = "Phone must contain only numbers";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -185,10 +186,13 @@ const CampaignCard = ({
             <Form.Group className="mb-2" controlId="phone">
               <Form.Label>Phone</Form.Label>
               <Form.Control
-                type="text"
+                type="tel"
                 placeholder="Your phone number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "" || /^\d+$/.test(val)) setPhone(val);
+                }}
                 isInvalid={submitted && !!errors.phone}
               />
               {submitted && errors.phone && (

@@ -1,11 +1,11 @@
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo, useContext, forwardRef, useImperativeHandle } from "react";
 import '../donors/donors.css';
 import DeleteConfirm from '../donors/DeleteConfirm';
 import { campaigns as initial } from "../../../data/campaigns";
 import AuthContext from "../../../services/authContext/AuthContext";
 import { ROLES } from "../../../services/authContext/auth.utils";
 
-const CampaignsTable = () => {
+const CampaignsTable = forwardRef((props, ref) => {
   const { isAuthenticated, role } = useContext(AuthContext);
   const isAdmin = isAuthenticated && role === ROLES.ADMIN;
   const [campaigns, setCampaigns] = useState(initial);
@@ -34,6 +34,8 @@ const CampaignsTable = () => {
     setEditing(null);
     setShowForm(true);
   };
+
+  useImperativeHandle(ref, () => ({ handleAdd }));
 
   const handleEdit = (campaign) => {
     setEditing(campaign);
@@ -81,14 +83,6 @@ const CampaignsTable = () => {
 
   return (
     <div className="donors-container">
-      <div className="donors-toolbar">
-        <div className="toolbar-left" />
-        <div className="toolbar-right">
-          <button className="btn primary" onClick={handleAdd}>
-            + Add Campaign
-          </button>
-        </div>
-      </div>
       <table className="donors-table">
         <thead>
           <tr>
@@ -137,6 +131,6 @@ const CampaignsTable = () => {
       />
     </div>
   );
-};
+});
 
 export default CampaignsTable;

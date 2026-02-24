@@ -6,6 +6,35 @@
 	padding: 16px;
 }
 
+.page-title-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.page-title-row h1 {
+	margin: 0;
+}
+
+.btn-add-round {
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	border: none;
+	background: var(--accent, #3b82f6);
+	color: #fff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	flex-shrink: 0;
+	padding: 0;
+}
+
+.btn-add-round:hover {
+	opacity: 0.85;
+}
+
 .donors-container {
 	padding: 12px;
 	margin: 0 24px;
@@ -263,8 +292,42 @@
 		padding: 8px 12px;
 	}
 
-	.mt-2.mx-4 > h1 {
+	.mt-2.mx-4 > h1,
+	.mt-2.mx-4 .page-title-row h1 {
 		font-size: 1.4rem;
 		margin-bottom: 4px;
+	}
+}
+
+.fab-add {
+	display: none;
+}
+
+@media (max-width: 991px) {
+	.fab-add {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		bottom: 76px;
+		right: 16px;
+		width: 48px;
+		height: 48px;
+		border-radius: 12px;
+		border: none;
+		background: var(--accent, #3b82f6);
+		color: #fff;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+		cursor: pointer;
+		z-index: 999;
+		padding: 0;
+	}
+
+	.fab-add:hover {
+		opacity: 0.85;
+	}
+
+	.page-title-row .btn-add-round {
+		display: none;
 	}
 }

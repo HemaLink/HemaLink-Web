@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext, useMemo } from 'react';
+import { useState, useEffect, useCallback, useContext, useMemo, forwardRef, useImperativeHandle } from 'react';
 import '../donors/donors.css';
 import ModeratorForm from './ModeratorForm';
 import PromoteConfirm from './PromoteConfirm';
@@ -13,7 +13,7 @@ import {
   promoteModerator,
 } from './moderators.services';
 
-const ModeratorsTable = () => {
+const ModeratorsTable = forwardRef((props, ref) => {
   const { isAuthenticated, role } = useContext(AuthContext);
   const isAdmin = isAuthenticated && role === ROLES.ADMIN;
   const [moderators, setModerators] = useState([]);
@@ -81,6 +81,8 @@ const ModeratorsTable = () => {
 
   const handleAdd = () => setShowForm(true);
 
+  useImperativeHandle(ref, () => ({ handleAdd }));
+
   const handleSave = async (form) => {
     try {
       await createModerator(form);
@@ -130,15 +132,6 @@ const ModeratorsTable = () => {
 
   return (
     <div className="donors-container">
-      <div className="donors-toolbar">
-        <div className="toolbar-left" />
-        <div className="toolbar-right">
-          <button className="btn primary" onClick={handleAdd}>
-            + Add Moderator
-          </button>
-        </div>
-      </div>
-
       <table className="donors-table">
         <thead>
           <tr>
@@ -155,7 +148,7 @@ const ModeratorsTable = () => {
         </thead>
         <tbody>
           {sortedModerators.map((m) => (
-            <tr key={`${m.type}-${m.id}`} style={{ height: '49px' }}>
+            <tr key={`${m.type}-${m.id}`}>
               <td data-label="ID">{m.id}</td>
               <td data-label="Name">{m.name}</td>
               <td data-label="Email">{m.email}</td>
@@ -213,6 +206,6 @@ const ModeratorsTable = () => {
       />
     </div>
   );
-};
+});
 
 export default ModeratorsTable;

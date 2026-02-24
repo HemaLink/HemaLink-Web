@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import '../donors/donors.css';
-import EntityForm from './EntityForm';
 import DeleteConfirm from '../donors/DeleteConfirm';
 import { getRequesters, getPendingRequesters, formatAdmissionStatus, acceptRequester, rejectRequester } from './entities.services';
 import AuthContext from '../../../services/authContext/AuthContext';
@@ -12,11 +11,9 @@ const EntitiesTable = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editing, setEditing] = useState(null);
-  const [showForm, setShowForm] = useState(false);
   const [sortKey, setSortKey] = useState('name');
   const [sortDir, setSortDir] = useState('asc');
-  const [filter, setFilter] = useState('all'); // 'all' | 'pending'
+  const [filter, setFilter] = useState('all');
 
   const fetchData = (selectedFilter) => {
     setLoading(true);
@@ -70,11 +67,6 @@ const EntitiesTable = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
 
-  const handleEdit = (item) => {
-    setEditing(item);
-    setShowForm(true);
-  };
-
   const handleDelete = (id) => {
     const it = items.find((x) => x.id === id);
     setDeleteTarget(it);
@@ -86,11 +78,6 @@ const EntitiesTable = () => {
     setItems((d) => d.filter((x) => x.id !== deleteTarget.id));
     setShowDelete(false);
     setDeleteTarget(null);
-  };
-
-  const handleSave = (entity) => {
-    setItems((d) => d.map((x) => (x.id === entity.id ? entity : x)));
-    setShowForm(false);
   };
 
   const sorted = useMemo(() => {
@@ -130,7 +117,8 @@ const EntitiesTable = () => {
               Email{sortIndicator('email')}
             </th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Approval</th>
+            {isAdmin && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -139,8 +127,15 @@ const EntitiesTable = () => {
               <td data-label="ID">{e.id}</td>
               <td data-label="Name">{e.name}</td>
               <td data-label="Email">{e.email}</td>
-              <td data-label="Status">{formatAdmissionStatus(e.admissionStatus)}</td>
-              <td>
+              <td data-label="Status">
+                <span style={{
+                  color: e.admissionStatus === 0 ? '#e6a817' : e.admissionStatus === 1 ? '#28a745' : e.admissionStatus === 2 ? '#dc3545' : 'inherit',
+                  fontWeight: 600
+                }}>
+                  {formatAdmissionStatus(e.admissionStatus)}
+                </span>
+              </td>
+              <td data-label="Approval">
                 {e.admissionStatus === 0 && (
                   <>
                     <button className="btn small primary" onClick={() => handleAccept(e.id)}>
@@ -151,23 +146,18 @@ const EntitiesTable = () => {
                     </button>
                   </>
                 )}
-                <button className="btn small" onClick={() => handleEdit(e)}>
-                  Edit
-                </button>
-                {isAdmin && (
+              </td>
+              {isAdmin && (
+                <td data-label="Actions">
                   <button className="btn small danger" onClick={() => handleDelete(e.id)}>
                     Delete
                   </button>
-                )}
-              </td>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
-
-      {showForm && (
-        <EntityForm initial={editing} visible={showForm} onClose={() => setShowForm(false)} onSave={handleSave} />
-      )}
 
       <DeleteConfirm visible={showDelete} onClose={() => setShowDelete(false)} onConfirm={confirmDelete} itemName={deleteTarget ? deleteTarget.name : 'this entity'} />
     </div>

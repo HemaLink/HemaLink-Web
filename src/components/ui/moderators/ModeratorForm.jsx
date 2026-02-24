@@ -8,7 +8,7 @@ import {
   CButton,
 } from '@coreui/react';
 
-const ModeratorForm = ({ onSave, onClose, visible = true }) => {
+const ModeratorForm = ({ onSave, onClose, visible = true, emailError = null, onEmailErrorClear }) => {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
 
   useEffect(() => {
@@ -17,6 +17,7 @@ const ModeratorForm = ({ onSave, onClose, visible = true }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'email' && onEmailErrorClear) onEmailErrorClear();
     setForm((f) => ({ ...f, [name]: value }));
   };
 
@@ -39,7 +40,18 @@ const ModeratorForm = ({ onSave, onClose, visible = true }) => {
           </label>
           <label>
             Email
-            <input name="email" type="email" value={form.email} onChange={handleChange} />
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              style={emailError ? { borderColor: '#dc3545' } : {}}
+            />
+            {emailError && (
+              <span style={{ color: '#dc3545', fontSize: '0.85rem', marginTop: 2, display: 'block' }}>
+                {emailError}
+              </span>
+            )}
           </label>
           <label>
             Password

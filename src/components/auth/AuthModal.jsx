@@ -14,7 +14,7 @@ const AuthModal = () => {
 
 	return (
 		<Modal show={showAuthModal} onHide={() => setShowAuthModal(false)} centered>
-			<Modal.Body>
+			<Modal.Body style={{ padding: '2rem' }}>
 				{modalView === "login" ? <LoginForm /> : <RegisterForm />}
 			</Modal.Body>
 		</Modal>

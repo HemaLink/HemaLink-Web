@@ -32,8 +32,13 @@ export const createModerator = async ({ name, email, password }) => {
     headers: authHeaders(),
     body: JSON.stringify({ name, email, password }),
   });
-  if (!res.ok) throw new Error(`Failed to create moderator (${res.status})`);
-  return res.json();
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(json.message || `Failed to create moderator (${res.status})`);
+    err.errors = json.errors || [];
+    throw err;
+  }
+  return json;
 };
 
 export const deleteModerator = async (id) => {

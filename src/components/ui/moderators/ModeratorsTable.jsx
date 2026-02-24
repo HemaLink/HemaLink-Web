@@ -50,6 +50,7 @@ const ModeratorsTable = forwardRef((props, ref) => {
   }, [moderators, sortKey, sortDir]);
 
   const [showForm, setShowForm] = useState(false);
+  const [emailError, setEmailError] = useState(null);
 
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
@@ -79,17 +80,25 @@ const ModeratorsTable = forwardRef((props, ref) => {
     fetchModerators();
   }, [fetchModerators]);
 
-  const handleAdd = () => setShowForm(true);
+  const handleAdd = () => {
+    setEmailError(null);
+    setShowForm(true);
+  };
 
   useImperativeHandle(ref, () => ({ handleAdd }));
 
   const handleSave = async (form) => {
     try {
+      setEmailError(null);
       await createModerator(form);
       setShowForm(false);
       fetchModerators();
     } catch (err) {
-      alert(err.message);
+      if (Array.isArray(err.errors) && err.errors.includes('This email is already used.')) {
+        setEmailError('This email is already in use.');
+      } else {
+        alert(err.message);
+      }
     }
   };
 
@@ -180,8 +189,10 @@ const ModeratorsTable = forwardRef((props, ref) => {
       {showForm && (
         <ModeratorForm
           visible={showForm}
-          onClose={() => setShowForm(false)}
+          onClose={() => { setEmailError(null); setShowForm(false); }}
           onSave={handleSave}
+          emailError={emailError}
+          onEmailErrorClear={() => setEmailError(null)}
         />
       )}
 

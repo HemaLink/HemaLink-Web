@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import AuthContext from "../../../services/authContext/AuthContext.js";
+import logo from "../../../assets/hemalink_isotype.png";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -8,30 +9,41 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
   const { setModalView, register } = useContext(AuthContext);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setEmailError(null);
     const res = await register(name, email, password);
     if (res.ok) {
-      setSuccess("Registration successful. You may now sign in.");
-      setTimeout(() => setModalView("login"), 1200);
+      setSuccess("Registration successful! Your account is pending approval.");
+      setTimeout(() => setModalView("login"), 2000);
+    } else if (Array.isArray(res.errors) && res.errors.includes("This email is already used.")) {
+      setEmailError("This email is already in use.");
     } else {
-      setError(res.message || "Registration failed");
+      setError(res.message || res.errors?.[0] || "Registration failed");
     }
   };
 
   return (
     <div>
-      <h5 className="mb-3">Register</h5>
+      <div className="text-center mb-4">
+        <img src={logo} alt="HemaLink" style={{ width: 64, height: 64, marginBottom: 12 }} />
+        <h4 style={{ fontWeight: 700 }}>Entity Registration</h4>
+        <p className="text-muted" style={{ fontSize: '0.9rem' }}>Register your organization to start creating donation campaigns</p>
+      </div>
+
       {success && <Alert variant="success">{success}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
+
       <Form onSubmit={handleRegister}>
         <Form.Group className="mb-2" controlId="formName">
           <Form.Control
             type="text"
-            placeholder="Full name"
+            placeholder="Entity / Organization Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -40,11 +52,13 @@ const Register = () => {
         <Form.Group className="mb-2" controlId="formEmail">
           <Form.Control
             type="email"
-            placeholder="Email"
+            placeholder="Contact Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setEmailError(null); }}
+            isInvalid={!!emailError}
             required
           />
+          {emailError && <Form.Text className="text-danger">{emailError}</Form.Text>}
         </Form.Group>
         <Form.Group className="mb-3" controlId="formPassword">
           <Form.Control
@@ -56,13 +70,14 @@ const Register = () => {
           />
         </Form.Group>
 
-        <div className="d-grid mb-2">
-          <Button type="submit" variant="primary">
-            Create Account
+        <div className="d-grid mb-3">
+          <Button type="submit" variant="danger">
+            Register as Donor Entity
           </Button>
         </div>
         <div className="text-center">
-          <a href="#" onClick={(e) => { e.preventDefault(); setModalView('login'); }}>Back to login</a>
+          <span className="text-muted" style={{ fontSize: '0.85rem' }}>Already have an account? </span>
+          <a href="#" onClick={(e) => { e.preventDefault(); setModalView('login'); }}>Sign in</a>
         </div>
       </Form>
     </div>

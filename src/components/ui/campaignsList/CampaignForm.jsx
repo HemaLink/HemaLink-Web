@@ -74,6 +74,7 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true, hideReq
     const e = {};
     if (showRequester && !form.requesterId) e.requesterId = 'Select a requester';
     if (!form.requestDate) e.requestDate = 'Date is required';
+    else if (!isEditing && new Date(form.requestDate) < new Date()) e.requestDate = 'Date cannot be in the past';
     if (!form.address.trim()) e.address = 'Address is required';
     if (!form.bloodTypesNeeded.length) e.bloodTypesNeeded = 'Select at least one blood type';
     if (!form.targetUnits || form.targetUnits < 1) e.targetUnits = 'Must be at least 1';
@@ -124,6 +125,7 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true, hideReq
               name="requestDate"
               value={form.requestDate}
               onChange={handleChange}
+              {...(!isEditing ? { min: toDatetimeLocal(new Date().toISOString()) } : {})}
             />
             {errors.requestDate && <span className="text-danger small">{errors.requestDate}</span>}
           </label>

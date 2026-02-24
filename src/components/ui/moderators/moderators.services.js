@@ -27,10 +27,11 @@ export const getAdmins = async () => {
 };
 
 export const createModerator = async ({ name, email, password }) => {
+  const normalizedEmail = email.toLowerCase();
   const res = await fetch(`${API}/api/admin/moderator`, {
     method: "POST",
     headers: authHeaders(),
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name, email: normalizedEmail, password }),
   });
   const json = await res.json().catch(() => ({}));
   if (!res.ok) {

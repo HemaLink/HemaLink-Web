@@ -123,7 +123,7 @@ const CampaignsTable = forwardRef((props, ref) => {
               Date{sortIndicator('requestDate')}
             </th>
             <th>Location</th>
-            <th>Units</th>
+            <th>Registered Donors</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -135,7 +135,7 @@ const CampaignsTable = forwardRef((props, ref) => {
               <td data-label="Blood Types">{c.bloodTypesNeeded.map(formatBloodType).join(', ')}</td>
               <td data-label="Date">{new Date(c.requestDate).toLocaleDateString()}</td>
               <td data-label="Location">{c.address}</td>
-              <td data-label="Units">{c.remainingUnits} / {c.targetUnits}</td>
+              <td data-label="Registered Donors">{c.targetUnits - c.remainingUnits} / {c.targetUnits}</td>
               <td data-label="Status">{c.requestStatus}</td>
               <td>
                 <button className="btn small" onClick={() => handleEdit(c)}>

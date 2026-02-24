@@ -140,7 +140,7 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true, hideReq
             {errors.address && <span className="text-danger small">{errors.address}</span>}
           </label>
           <label>
-            Target Units
+            Target Donors
             <input
               type="number"
               name="targetUnits"

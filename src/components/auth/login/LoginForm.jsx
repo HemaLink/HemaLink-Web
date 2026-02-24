@@ -2,12 +2,13 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Alert, Modal } from "react-bootstrap";
 import AuthContext from "../../../services/authContext/AuthContext.js";
+import useLowercaseEmail from "../../../hooks/useLowercaseEmail";
 import logo from "../../../assets/hemalink_isotype.png";
 
 const PENDING_ERROR = "Requester account is not accepted yet.";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useLowercaseEmail("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [showPending, setShowPending] = useState(false);
@@ -57,7 +58,7 @@ const Login = () => {
             type="text"
             placeholder="Email"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={setUsername}
             required
           />
         </Form.Group>

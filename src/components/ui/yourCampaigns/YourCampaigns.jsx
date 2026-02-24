@@ -181,7 +181,7 @@ const YourCampaigns = () => {
                   Date{sortIndicator('requestDate')}
                 </th>
                 <th>Address</th>
-                <th>Units</th>
+                <th>Registered Donors</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -193,7 +193,7 @@ const YourCampaigns = () => {
                   <td data-label="Blood Types">{c.bloodTypesNeeded.map(formatBloodType).join(', ')}</td>
                   <td data-label="Date">{new Date(c.requestDate).toLocaleDateString()}</td>
                   <td data-label="Address">{c.address}</td>
-                  <td data-label="Units">{c.remainingUnits} / {c.targetUnits}</td>
+                  <td data-label="Registered Donors">{c.targetUnits - c.remainingUnits} / {c.targetUnits}</td>
                   <td data-label="Status">
                     <span style={{ color: STATUS_COLORS[c.requestStatus] || 'inherit', fontWeight: 600 }}>
                       {c.requestStatus}

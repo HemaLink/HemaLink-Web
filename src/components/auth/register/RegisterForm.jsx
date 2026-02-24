@@ -1,11 +1,12 @@
 import { useState, useContext } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import AuthContext from "../../../services/authContext/AuthContext.js";
+import useLowercaseEmail from "../../../hooks/useLowercaseEmail";
 import logo from "../../../assets/hemalink_isotype.png";
 
 const Register = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail, resetEmail] = useLowercaseEmail("");
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
@@ -54,7 +55,7 @@ const Register = () => {
             type="email"
             placeholder="Contact Email"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setEmailError(null); }}
+            onChange={(e) => { setEmail(e); setEmailError(null); }}
             isInvalid={!!emailError}
             required
           />

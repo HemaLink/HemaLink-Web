@@ -43,10 +43,11 @@ export const getBloodRequests = async () => {
 };
 
 export const signUpToDonate = async ({ bloodRequestId, donorName, donorEmail, donorPhone }) => {
+  const normalizedEmail = donorEmail.toLowerCase();
   const res = await fetch(`${API}/api/Donor/blood-requests`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bloodRequestId, donorName, donorEmail, donorPhone }),
+    body: JSON.stringify({ bloodRequestId, donorName, donorEmail: normalizedEmail, donorPhone }),
   });
   if (!res.ok) throw new Error(`Request failed (${res.status})`);
   return res.json().catch(() => ({}));

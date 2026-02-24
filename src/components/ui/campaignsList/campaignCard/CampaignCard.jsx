@@ -3,6 +3,7 @@ import { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { cilCalendar, cilLocationPin, cilDrop } from "@coreui/icons";
 import { signUpToDonate, formatBloodType } from "../campaigns.services";
+import useLowercaseEmail from "../../../../hooks/useLowercaseEmail";
 import "./campaignCard.css";
 
 const CampaignCard = ({
@@ -17,16 +18,19 @@ const CampaignCard = ({
 }) => {
   const [show, setShow] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail, resetEmail] = useLowercaseEmail("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [localRemaining, setLocalRemaining] = useState(remainingUnits);
+  const [localStatus, setLocalStatus] = useState(requestStatus);
+  const [hasDonated, setHasDonated] = useState(false);
 
   const openModal = () => setShow(true);
   const closeModal = () => {
     setShow(false);
-    setEmail("");
+    resetEmail();
     setFullName("");
     setPhone("");
     setErrors({});
@@ -54,6 +58,12 @@ const CampaignCard = ({
         donorEmail: email.trim(),
         donorPhone: phone.trim(),
       });
+      const newRemaining = localRemaining - 1;
+      setLocalRemaining(newRemaining);
+      setHasDonated(true);
+      if (newRemaining <= 0) {
+        setLocalStatus("Completed");
+      }
       closeModal();
       setShowSuccess(true);
     } catch (err) {
@@ -87,17 +97,6 @@ const CampaignCard = ({
     return colors[bloodType] || "dark";
   };
 
-  const getBaiduMapUrl = (lng, lat, title, content) => {
-    const params = new URLSearchParams({
-      lng,
-      lat,
-      title,
-      content,
-      output: "html",
-    });
-    return `https://api.map.baidu.com/lbsapi/getpoint/index.html?${params.toString()}`;
-  };
-
   return (
     <Card
       key={id}
@@ -114,8 +113,8 @@ const CampaignCard = ({
             ))}
           </div>
         </Card.Header>
-        <Card.Subtitle className={`mb-4 text-${getStatusColor(requestStatus)}`}>
-          {requestStatus}
+        <Card.Subtitle className={`mb-4 text-${getStatusColor(localStatus)}`}>
+          {localStatus}
         </Card.Subtitle>
         <div className="mb-3">
           <div className="d-flex align-items-center gap-2">
@@ -128,7 +127,7 @@ const CampaignCard = ({
           </div>
           <div className="d-flex align-items-center gap-2">
             <CIcon icon={cilDrop} className="nav-icon" />
-            {remainingUnits} / {targetUnits} units
+            Registered Donors {targetUnits - localRemaining} / {targetUnits}
           </div>
         </div>
         {!window.localStorage.getItem("hemalink-token") && (
@@ -138,8 +137,9 @@ const CampaignCard = ({
               size="sm"
               className="details-btn"
               onClick={openModal}
+              disabled={localStatus === "Completed"}
             >
-              I Want to Donate
+              {localStatus === "Completed" ? "Completed" : "I Want to Donate"}
             </Button>
           </div>
         )}
@@ -153,13 +153,6 @@ const CampaignCard = ({
           <div className="mb-3">
             <strong>Location:</strong> {address}
           </div>
-          <iframe
-            title="baidu-map"
-            src={getBaiduMapUrl(116.404, 39.915, requesterName, address)}
-            style={{ width: "100%", height: 200, border: 0 }}
-            allowFullScreen
-          />
-
           <Form onSubmit={handleSubmit} noValidate>
             <Form.Group className="mb-2" controlId="fullName">
               <Form.Label>Name</Form.Label>
@@ -181,7 +174,7 @@ const CampaignCard = ({
                 type="email"
                 placeholder="name@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={setEmail}
                 isInvalid={submitted && !!errors.email}
               />
               {submitted && errors.email && (

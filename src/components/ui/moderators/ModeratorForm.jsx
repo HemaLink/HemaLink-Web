@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import useLowercaseEmail from '../../../hooks/useLowercaseEmail';
 import {
   CModal,
   CModalHeader,
@@ -9,22 +10,30 @@ import {
 } from '@coreui/react';
 
 const ModeratorForm = ({ onSave, onClose, visible = true, emailError = null, onEmailErrorClear }) => {
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', password: '' });
+  const [email, setEmail, resetEmail] = useLowercaseEmail('');
 
   useEffect(() => {
-    if (visible) setForm({ name: '', email: '', password: '' });
-  }, [visible]);
+    if (visible) {
+      setForm({ name: '', password: '' });
+      resetEmail();
+    }
+  }, [visible, resetEmail]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'email' && onEmailErrorClear) onEmailErrorClear();
+    if (name === 'email') {
+      if (onEmailErrorClear) onEmailErrorClear();
+      setEmail(e);
+      return;
+    }
     setForm((f) => ({ ...f, [name]: value }));
   };
 
   const submit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password) return;
-    onSave(form);
+    if (!form.name || !email || !form.password) return;
+    onSave({ ...form, email });
   };
 
   return (
@@ -43,7 +52,7 @@ const ModeratorForm = ({ onSave, onClose, visible = true, emailError = null, onE
             <input
               name="email"
               type="email"
-              value={form.email}
+              value={email}
               onChange={handleChange}
               style={emailError ? { borderColor: '#dc3545' } : {}}
             />

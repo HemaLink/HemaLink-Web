@@ -24,7 +24,7 @@ function App() {
               <Route path="/moderators" element={<Moderators />} />
             </Route>
           </Route>
-          <Route path="/cancel/:bloodRequestId/:cancellationToken" element={<CancelAppointment />} />
+          <Route path="/donation-cancelation/:bloodRequestId/:cancellationToken" element={<CancelAppointment />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

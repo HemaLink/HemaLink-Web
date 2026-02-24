@@ -17,8 +17,9 @@ const toDatetimeLocal = (iso) => {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
-const CampaignForm = ({ initial = null, onSave, onClose, visible = true }) => {
+const CampaignForm = ({ initial = null, onSave, onClose, visible = true, hideRequester = false }) => {
   const isEditing = !!initial;
+  const showRequester = !isEditing && !hideRequester;
   const [form, setForm] = useState({
     requesterId: '',
     requestDate: '',
@@ -30,12 +31,12 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true }) => {
   const [requesters, setRequesters] = useState([]);
 
   useEffect(() => {
-    if (!isEditing) {
+    if (showRequester) {
       getRequesters()
         .then(setRequesters)
         .catch(() => setRequesters([]));
     }
-  }, [isEditing]);
+  }, [showRequester]);
 
   useEffect(() => {
     if (initial) {
@@ -71,7 +72,7 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true }) => {
 
   const validate = () => {
     const e = {};
-    if (!isEditing && !form.requesterId) e.requesterId = 'Select a requester';
+    if (showRequester && !form.requesterId) e.requesterId = 'Select a requester';
     if (!form.requestDate) e.requestDate = 'Date is required';
     if (!form.address.trim()) e.address = 'Address is required';
     if (!form.bloodTypesNeeded.length) e.bloodTypesNeeded = 'Select at least one blood type';
@@ -89,7 +90,7 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true }) => {
       bloodTypesNeeded: form.bloodTypesNeeded,
       targetUnits: form.targetUnits,
     };
-    if (!isEditing) payload.requesterId = Number(form.requesterId);
+    if (showRequester) payload.requesterId = Number(form.requesterId);
     onSave(payload);
   };
 
@@ -100,7 +101,7 @@ const CampaignForm = ({ initial = null, onSave, onClose, visible = true }) => {
       </CModalHeader>
       <CModalBody>
         <form onSubmit={submit} className="donor-form">
-          {!isEditing && (
+          {showRequester && (
             <label>
               Requester
               <select

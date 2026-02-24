@@ -1,5 +1,5 @@
 import { Card, Button, Badge, Modal, Form } from "react-bootstrap";
-import React, { useState } from "react";
+import { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { cilCalendar, cilLocationPin, cilDrop } from "@coreui/icons";
 import { signUpToDonate, formatBloodType } from "../campaigns.services";
@@ -131,7 +131,7 @@ const CampaignCard = ({
             {remainingUnits} / {targetUnits} units
           </div>
         </div>
-        {!(window.localStorage.getItem("hemalink-auth") && JSON.parse(window.localStorage.getItem("hemalink-auth")).role === "Admin") && (
+        {!window.localStorage.getItem("hemalink-token") && (
           <div className="d-flex justify-content-end mt-auto">
             <Button
               variant="outline-primary"

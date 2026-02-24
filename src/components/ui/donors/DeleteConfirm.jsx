@@ -1,18 +1,18 @@
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/react';
 
-const DeleteConfirm = ({ visible = false, onClose, onConfirm, itemName = 'this item' }) => {
+const DeleteConfirm = ({ visible = false, onClose, onConfirm, itemName = 'this item', title = 'Confirm Delete', actionLabel = 'Delete', actionVerb = 'delete' }) => {
   return (
     <CModal visible={visible} onClose={onClose} backdrop>
       <CModalHeader>
-        <CModalTitle>Confirm Delete</CModalTitle>
+        <CModalTitle>{title}</CModalTitle>
       </CModalHeader>
-      <CModalBody>Are you sure you want to delete {itemName}?</CModalBody>
+      <CModalBody>Are you sure you want to {actionVerb} {itemName}?</CModalBody>
       <CModalFooter>
         <CButton color="danger" onClick={onConfirm}>
-          Delete
+          {actionLabel}
         </CButton>
         <CButton color="secondary" onClick={onClose}>
-          Cancel
+          Close
         </CButton>
       </CModalFooter>
     </CModal>

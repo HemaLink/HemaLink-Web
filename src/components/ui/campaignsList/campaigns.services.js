@@ -7,7 +7,6 @@ const BLOOD_TYPE_LABELS = {
   O_Pos: "O+", O_Neg: "O-",
 };
 
-// C# enum integer values (BloodType): A_Pos=0 … O_Neg=7
 const BLOOD_TYPE_INT = {
   A_Pos: 0, A_Neg: 1,
   B_Pos: 2, B_Neg: 3,
@@ -80,4 +79,48 @@ export const deleteBloodRequest = async (requestId) => {
   });
   if (!res.ok) throw new Error(`Delete failed (${res.status})`);
   return res.json().catch(() => ({}));
+};
+
+export const createRequesterBloodRequest = async ({ requestDate, address, bloodTypesNeeded, targetUnits }) => {
+  const res = await fetch(`${API}/api/Requester/blood-requests`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({ requestDate, address, bloodTypesNeeded: toIntBloodTypes(bloodTypesNeeded), targetUnits }),
+  });
+  if (!res.ok) throw new Error(`Create failed (${res.status})`);
+  return res.json().catch(() => ({}));
+};
+
+export const updateRequesterBloodRequest = async (requestId, { requestDate, address, bloodTypesNeeded, targetUnits }) => {
+  const res = await fetch(`${API}/api/Requester/blood-requests/${requestId}`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify({ requestDate, address, bloodTypesNeeded: toIntBloodTypes(bloodTypesNeeded), targetUnits }),
+  });
+  if (!res.ok) throw new Error(`Update failed (${res.status})`);
+  return res.json().catch(() => ({}));
+};
+
+export const cancelRequesterBloodRequest = async (requestId) => {
+  const res = await fetch(`${API}/api/Requester/blood-requests/cancel/${requestId}`, {
+    method: "PUT",
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error(`Cancel failed (${res.status})`);
+  return res.json().catch(() => ({}));
+};
+
+export const REQUEST_STATUSES = ["Open", "Completed", "Expired", "Cancelled"];
+
+export const getOwnBloodRequests = async (statuses = []) => {
+  const params = new URLSearchParams();
+  statuses.forEach((s) => params.append("statuses", s));
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const res = await fetch(`${API}/api/Requester/blood-requests/own${query}`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error(`Request failed (${res.status})`);
+  const json = await res.json();
+  if (!json.success) throw new Error(json.message || "Failed to fetch your campaigns");
+  return json.data;
 };

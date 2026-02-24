@@ -22,7 +22,6 @@ import {
   cilUser,
   cilPeople,
   cilHospital,
-  cilCalendar,
   cilAccountLogout,
   cilMoon,
   cilSun,
@@ -55,7 +54,7 @@ const Sidebar = () => {
         </CSidebarBrand>
       </CSidebarHeader>
       <CSidebarNav className="flex-grow-1 px-2">
-        {isAuthenticated && role === ROLES.REQUESTER ? (
+        {isAuthenticated && role === ROLES.REQUESTER && (
           <CNavItem>
             <NavLink
               to="/your-campaigns"
@@ -65,18 +64,17 @@ const Sidebar = () => {
               Your Campaigns
             </NavLink>
           </CNavItem>
-        ) : (
-          <CNavItem>
-            <NavLink
-              to="/"
-              end
-              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-            >
-              <CIcon icon={cilDrop} className="nav-icon" />
-              Donations
-            </NavLink>
-          </CNavItem>
         )}
+        <CNavItem>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
+            <CIcon icon={cilDrop} className="nav-icon" />
+            Donations
+          </NavLink>
+        </CNavItem>
         {isAuthenticated && role >= ROLES.MODERATOR && (
           <>
             <CNavItem>
@@ -89,12 +87,6 @@ const Sidebar = () => {
               <NavLink to="/entities" className="nav-link">
                 <CIcon icon={cilHospital} className="nav-icon" />
                 Entities
-              </NavLink>
-            </CNavItem>
-            <CNavItem>
-              <NavLink to="/appointments" className="nav-link">
-                <CIcon icon={cilCalendar} className="nav-icon" />
-                Appointments
               </NavLink>
             </CNavItem>
           </>
@@ -111,9 +103,9 @@ const Sidebar = () => {
       <CSidebarFooter className="px-3 py-3">
         <div className="d-flex flex-column gap-2">
           {isAuthenticated && (
-            <div className="nav-link" style={{ fontSize: '0.85rem', cursor: 'default' }}>
+            <span className="nav-link" style={{ fontSize: '0.85rem', cursor: 'default', pointerEvents: 'none' }}>
               <strong>Type:</strong> {ROLE_LABELS[role] ?? 'Unknown'}
-            </div>
+            </span>
           )}
           <CNavLink
             onClick={handleToggleTheme}

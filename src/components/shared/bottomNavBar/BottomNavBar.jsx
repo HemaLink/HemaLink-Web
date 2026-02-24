@@ -11,7 +11,6 @@ import {
   cilUser,
   cilPeople,
   cilHospital,
-  cilCalendar,
   cilAccountLogout,
   cilMoon,
   cilSun,
@@ -31,7 +30,7 @@ const BottomNavBar = () => {
   return (
     <nav className="bottom-nav-bar noselect">
       <div className="nav-items">
-        {isAuthenticated && role === ROLES.REQUESTER ? (
+        {isAuthenticated && role === ROLES.REQUESTER && (
           <NavLink
             to="/your-campaigns"
             className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
@@ -40,17 +39,16 @@ const BottomNavBar = () => {
             <CIcon icon={cilList} className="nav-icon" />
             <span className="nav-label">Your Campaigns</span>
           </NavLink>
-        ) : (
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-            title="Donations"
-          >
-            <CIcon icon={cilDrop} className="nav-icon" />
-            <span className="nav-label">Donations</span>
-          </NavLink>
         )}
+        <NavLink
+          to="/"
+          end
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          title="Donations"
+        >
+          <CIcon icon={cilDrop} className="nav-icon" />
+          <span className="nav-label">Donations</span>
+        </NavLink>
         {isAuthenticated && role >= ROLES.MODERATOR && (
           <>
             <NavLink
@@ -68,14 +66,6 @@ const BottomNavBar = () => {
             >
               <CIcon icon={cilHospital} className="nav-icon" />
               <span className="nav-label">Entities</span>
-            </NavLink>
-            <NavLink
-              to="/appointments"
-              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-              title="Appointments"
-            >
-              <CIcon icon={cilCalendar} className="nav-icon" />
-              <span className="nav-label">Appointments</span>
             </NavLink>
           </>
         )}

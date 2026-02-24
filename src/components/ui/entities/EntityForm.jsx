@@ -12,30 +12,22 @@ const EntityForm = ({ initial = null, onSave, onClose, visible = true }) => {
   const [form, setForm] = useState({
     id: initial?.id || null,
     name: initial?.name || '',
-    type: initial?.type || '',
-    contact: initial?.contact || '',
-    phone: initial?.phone || '',
-    address: initial?.address || '',
-    createdAt: initial?.createdAt || '',
-    isActive: initial?.isActive ?? true,
+    email: initial?.email || '',
+    admissionStatus: initial?.admissionStatus ?? 0,
   });
 
   useEffect(() => {
     setForm({
       id: initial?.id || null,
       name: initial?.name || '',
-      type: initial?.type || '',
-      contact: initial?.contact || '',
-      phone: initial?.phone || '',
-      address: initial?.address || '',
-      createdAt: initial?.createdAt || '',
-      isActive: initial?.isActive ?? true,
+      email: initial?.email || '',
+      admissionStatus: initial?.admissionStatus ?? 0,
     });
   }, [initial]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }));
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: name === 'admissionStatus' ? Number(value) : value }));
   };
 
   const submit = (e) => {
@@ -56,27 +48,16 @@ const EntityForm = ({ initial = null, onSave, onClose, visible = true }) => {
             <input name="name" value={form.name} onChange={handleChange} />
           </label>
           <label>
-            Type
-            <input name="type" value={form.type} onChange={handleChange} />
+            Email
+            <input name="email" type="email" value={form.email} onChange={handleChange} />
           </label>
           <label>
-            Contact
-            <input name="contact" value={form.contact} onChange={handleChange} />
-          </label>
-          <label>
-            Phone
-            <input name="phone" value={form.phone} onChange={handleChange} />
-          </label>
-          <label>
-            Address
-            <input name="address" value={form.address} onChange={handleChange} />
-          </label>
-          <label>
-            Created At
-            <input type="date" name="createdAt" value={form.createdAt} onChange={handleChange} />
-          </label>
-          <label className="checkbox-label">
-            <input type="checkbox" name="isActive" checked={form.isActive} onChange={handleChange} /> Active
+            Admission Status
+            <select name="admissionStatus" value={form.admissionStatus} onChange={handleChange}>
+              <option value={0}>Pending</option>
+              <option value={1}>Approved</option>
+              <option value={2}>Rejected</option>
+            </select>
           </label>
         </form>
       </CModalBody>

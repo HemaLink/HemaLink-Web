@@ -1,20 +1,33 @@
-import React, { useState, useMemo, useContext, forwardRef, useImperativeHandle } from "react";
+import React, { useState, useEffect, useMemo, useContext, forwardRef, useImperativeHandle } from "react";
 import '../donors/donors.css';
 import DeleteConfirm from '../donors/DeleteConfirm';
-import { campaigns as initial } from "../../../data/campaigns";
+import CampaignForm from './CampaignForm';
+import { getBloodRequests, formatBloodType, updateBloodRequest, deleteBloodRequest, createBloodRequest } from "./campaigns.services";
 import AuthContext from "../../../services/authContext/AuthContext";
 import { ROLES } from "../../../services/authContext/auth.utils";
 
 const CampaignsTable = forwardRef((props, ref) => {
   const { isAuthenticated, role } = useContext(AuthContext);
   const isAdmin = isAuthenticated && role === ROLES.ADMIN;
-  const [campaigns, setCampaigns] = useState(initial);
+  const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
-  const [sortKey, setSortKey] = useState('date');
+  const [sortKey, setSortKey] = useState('requestDate');
   const [sortDir, setSortDir] = useState('desc');
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    getBloodRequests()
+      .then((data) => { if (!cancelled) { setCampaigns(data); setError(null); } })
+      .catch((err) => { if (!cancelled) setError(err.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   const toggleSort = (key) => {
     if (sortKey === key) {
@@ -43,34 +56,47 @@ const CampaignsTable = forwardRef((props, ref) => {
   };
 
   const handleDelete = (id) => {
-    const campaign = campaigns.find((x) => x.id === id);
+    const campaign = campaigns.find((x) => x.requestId === id);
     setDeleteTarget(campaign);
     setShowDelete(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deleteTarget) return;
-    setCampaigns((c) => c.filter((x) => x.id !== deleteTarget.id));
+    try {
+      await deleteBloodRequest(deleteTarget.requestId);
+      setCampaigns((c) => c.filter((x) => x.requestId !== deleteTarget.requestId));
+    } catch (err) {
+      setError(err.message);
+    }
     setShowDelete(false);
     setDeleteTarget(null);
   };
 
-  const handleSave = (campaign) => {
-    if (campaign.id) {
-      setCampaigns((c) => c.map((x) => (x.id === campaign.id ? campaign : x)));
-    } else {
-      const nextId = campaigns.length ? Math.max(...campaigns.map((c) => c.id)) + 1 : 1;
-      setCampaigns((c) => [...c, { ...campaign, id: nextId }]);
+  const handleSave = async (formData) => {
+    try {
+      if (editing) {
+        await updateBloodRequest(editing.requestId, formData);
+        setCampaigns((c) =>
+          c.map((x) => (x.requestId === editing.requestId ? { ...x, ...formData } : x))
+        );
+      } else {
+        const res = await createBloodRequest(formData);
+        const created = res.data ?? res;
+        setCampaigns((c) => [...c, created]);
+      }
+      setShowForm(false);
+    } catch (err) {
+      setError(err.message);
     }
-    setShowForm(false);
   };
 
   const sorted = useMemo(() => {
     const copy = [...campaigns];
     copy.sort((a, b) => {
       let cmp = 0;
-      if (sortKey === 'date') {
-        cmp = new Date(a.date) - new Date(b.date);
+      if (sortKey === 'requestDate') {
+        cmp = new Date(a.requestDate) - new Date(b.requestDate);
       } else {
         const valA = (a[sortKey] || '').toString().toLowerCase();
         const valB = (b[sortKey] || '').toString().toLowerCase();
@@ -81,17 +107,20 @@ const CampaignsTable = forwardRef((props, ref) => {
     return copy;
   }, [campaigns, sortKey, sortDir]);
 
+  if (loading) return <p>Loading campaigns...</p>;
+  if (error) return <p className="text-danger">Error: {error}</p>;
+
   return (
     <div className="donors-container">
       <table className="donors-table">
         <thead>
           <tr>
-            <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('entityName')}>
-              Entity{sortIndicator('entityName')}
+            <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('requesterName')}>
+              Entity{sortIndicator('requesterName')}
             </th>
-            <th>Blood Type</th>
-            <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('date')}>
-              Date{sortIndicator('date')}
+            <th>Blood Types</th>
+            <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('requestDate')}>
+              Date{sortIndicator('requestDate')}
             </th>
             <th>Location</th>
             <th>Units</th>
@@ -101,19 +130,19 @@ const CampaignsTable = forwardRef((props, ref) => {
         </thead>
         <tbody>
           {sorted.map((c) => (
-            <tr key={c.id}>
-              <td data-label="Entity">{c.entityName}</td>
-              <td data-label="Blood Type">{c.bloodType}</td>
-              <td data-label="Date">{c.date}</td>
-              <td data-label="Location">{c.location}</td>
-              <td data-label="Units">{c.units}</td>
-              <td data-label="Status">{c.status}</td>
+            <tr key={c.requestId}>
+              <td data-label="Entity">{c.requesterName}</td>
+              <td data-label="Blood Types">{c.bloodTypesNeeded.map(formatBloodType).join(', ')}</td>
+              <td data-label="Date">{new Date(c.requestDate).toLocaleDateString()}</td>
+              <td data-label="Location">{c.address}</td>
+              <td data-label="Units">{c.remainingUnits} / {c.targetUnits}</td>
+              <td data-label="Status">{c.requestStatus}</td>
               <td>
                 <button className="btn small" onClick={() => handleEdit(c)}>
                   Edit
                 </button>
                 {isAdmin && (
-                  <button className="btn small danger" onClick={() => handleDelete(c.id)}>
+                  <button className="btn small danger" onClick={() => handleDelete(c.requestId)}>
                     Delete
                   </button>
                 )}
@@ -127,8 +156,17 @@ const CampaignsTable = forwardRef((props, ref) => {
         visible={showDelete}
         onClose={() => setShowDelete(false)}
         onConfirm={confirmDelete}
-        itemName={deleteTarget ? deleteTarget.entityName : 'this campaign'}
+        itemName={deleteTarget ? deleteTarget.requesterName : 'this campaign'}
       />
+
+      {showForm && (
+        <CampaignForm
+          visible={showForm}
+          initial={editing}
+          onSave={handleSave}
+          onClose={() => setShowForm(false)}
+        />
+      )}
     </div>
   );
 });

@@ -1,10 +1,10 @@
-import { useState, useContext, useRef } from "react";
-import { campaigns } from "../../../data/campaigns.js";
+import { useState, useEffect, useContext, useRef } from "react";
 import CampaignCard from "./campaignCard/CampaignCard.jsx";
 import CampaignSearch from "./CampaignSearch.jsx";
 import CampaignsTable from "./CampaignsTable.jsx";
 import AuthContext from "../../../services/authContext/AuthContext";
 import { ROLES } from "../../../services/authContext/auth.utils";
+import { getBloodRequests } from "./campaigns.services";
 import '../donors/donors.css';
 
 const addSvg = (
@@ -15,8 +15,21 @@ const addSvg = (
 
 const CampaignsList = () => {
   const [search, setSearch] = useState("");
+  const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { isAuthenticated, role } = useContext(AuthContext);
   const tableRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    getBloodRequests()
+      .then((data) => { if (!cancelled) { setCampaigns(data); setError(null); } })
+      .catch((err) => { if (!cancelled) setError(err.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   const handleSearchChange = (searchValue) => {
     setSearch(searchValue);
@@ -42,22 +55,24 @@ const CampaignsList = () => {
   }
 
   const mappedCampaigns = campaigns
-    .filter((campaign) => {
+    .filter((c) => {
       const query = search.toLowerCase();
       return (
-        campaign.entityName.toLowerCase().includes(query) ||
-        campaign.location.toLowerCase().includes(query)
+        c.requesterName.toLowerCase().includes(query) ||
+        c.address.toLowerCase().includes(query)
       );
     })
-    .map((campaign) => (
+    .map((c) => (
       <CampaignCard
-        key={campaign.id}
-        entityName={campaign.entityName}
-        bloodType={campaign.bloodType}
-        date={campaign.date}
-        location={campaign.location}
-        units={campaign.units}
-        status={campaign.status}
+        key={c.requestId}
+        id={c.requestId}
+        requesterName={c.requesterName}
+        bloodTypesNeeded={c.bloodTypesNeeded}
+        requestDate={c.requestDate}
+        address={c.address}
+        remainingUnits={c.remainingUnits}
+        targetUnits={c.targetUnits}
+        requestStatus={c.requestStatus}
       />
     ));
 
@@ -66,6 +81,11 @@ const CampaignsList = () => {
       <h1>Donations</h1>
       <CampaignSearch onSearch={handleSearchChange} search={search} />
       <hr />
+      {loading ? (
+        <p>Loading campaigns...</p>
+      ) : error ? (
+        <p className="text-danger">Error: {error}</p>
+      ) : (
       <section
         style={{
           maxHeight: "calc(100dvh - 10em)",
@@ -78,10 +98,11 @@ const CampaignsList = () => {
           {mappedCampaigns.length ? (
             mappedCampaigns
           ) : (
-            <p>No campaigns founds.</p>
+            <p>No campaigns found.</p>
           )}
         </div>
       </section>
+      )}
     </div>
   );
 };

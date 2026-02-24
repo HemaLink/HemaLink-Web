@@ -2,44 +2,63 @@ import { Card, Button, Badge, Modal, Form } from "react-bootstrap";
 import React, { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { cilCalendar, cilLocationPin, cilDrop } from "@coreui/icons";
+import { signUpToDonate, formatBloodType } from "../campaigns.services";
 import "./campaignCard.css";
 
 const CampaignCard = ({
   id,
-  entityName,
-  bloodType,
-  date,
-  location,
-  units,
-  status,
+  requesterName,
+  bloodTypesNeeded,
+  requestDate,
+  address,
+  remainingUnits,
+  targetUnits,
+  requestStatus,
 }) => {
   const [show, setShow] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
 
   const openModal = () => setShow(true);
   const closeModal = () => {
     setShow(false);
     setEmail("");
     setFullName("");
+    setPhone("");
     setErrors({});
+    setSubmitted(false);
   };
 
   const validate = () => {
     const e = {};
-    if (!fullName.trim()) e.fullName = "Full name is required";
+    if (!fullName.trim()) e.fullName = "Name is required";
     if (!email.trim()) e.email = "Email is required";
-    else if (!/^\S+@\S+\.\S+$/.test(email)) e.email = "Email is invalid";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Please enter a valid email address";
+    if (!phone.trim()) e.phone = "Phone is required";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev) => {
+  const handleSubmit = async (ev) => {
     ev.preventDefault();
+    setSubmitted(true);
     if (!validate()) return;
-    alert("Thanks! You've been signed up to donate. (Demo)");
-    closeModal();
+    try {
+      await signUpToDonate({
+        bloodRequestId: id,
+        donorName: fullName.trim(),
+        donorEmail: email.trim(),
+        donorPhone: phone.trim(),
+      });
+      closeModal();
+      setShowSuccess(true);
+    } catch (err) {
+      setErrors((prev) => ({ ...prev, api: err.message }));
+    }
   };
   const getStatusColor = (status) => {
     switch (status) {
@@ -86,26 +105,30 @@ const CampaignCard = ({
     >
       <Card.Body className="d-flex flex-column flex-grow-1">
         <Card.Header className="bg-transparent border-0 p-0 m-0 d-flex justify-content-between align-items-center">
-          <Card.Title>{entityName}</Card.Title>
-          <Badge className="bloodtype-font" bg={getBloodTypeColor(bloodType)}>
-            {bloodType}
-          </Badge>
+          <Card.Title>{requesterName}</Card.Title>
+          <div className="d-flex flex-column gap-1 align-items-end">
+            {bloodTypesNeeded.map((bt) => (
+              <Badge key={bt} className="bloodtype-font" bg={getBloodTypeColor(formatBloodType(bt))}>
+                {formatBloodType(bt)}
+              </Badge>
+            ))}
+          </div>
         </Card.Header>
-        <Card.Subtitle className={`mb-4 text-${getStatusColor(status)}`}>
-          {status}
+        <Card.Subtitle className={`mb-4 text-${getStatusColor(requestStatus)}`}>
+          {requestStatus}
         </Card.Subtitle>
         <div className="mb-3">
           <div className="d-flex align-items-center gap-2">
             <CIcon icon={cilCalendar} className="nav-icon" />
-            {date}
+            {new Date(requestDate).toLocaleDateString()}
           </div>
           <div className="d-flex align-items-center gap-2">
             <CIcon icon={cilLocationPin} className="nav-icon" />
-            {location}
+            {address}
           </div>
           <div className="d-flex align-items-center gap-2">
             <CIcon icon={cilDrop} className="nav-icon" />
-            {units}
+            {remainingUnits} / {targetUnits} units
           </div>
         </div>
         {!(window.localStorage.getItem("hemalink-auth") && JSON.parse(window.localStorage.getItem("hemalink-auth")).role === "Admin") && (
@@ -124,32 +147,32 @@ const CampaignCard = ({
 
       <Modal show={show} onHide={closeModal} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Donate — {entityName}</Modal.Title>
+          <Modal.Title>Donate — {requesterName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="mb-3">
-            <strong>Location:</strong> {location}
+            <strong>Location:</strong> {address}
           </div>
           <iframe
             title="baidu-map"
-            src={getBaiduMapUrl(116.404, 39.915, entityName, location)}
+            src={getBaiduMapUrl(116.404, 39.915, requesterName, address)}
             style={{ width: "100%", height: 200, border: 0 }}
             allowFullScreen
           />
 
           <Form onSubmit={handleSubmit} noValidate>
             <Form.Group className="mb-2" controlId="fullName">
-              <Form.Label>Full name</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Your full name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                isInvalid={!!errors.fullName}
+                isInvalid={submitted && !!errors.fullName}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.fullName}
-              </Form.Control.Feedback>
+              {submitted && errors.fullName && (
+                <div className="text-danger small mt-1">{errors.fullName}</div>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-2" controlId="email">
@@ -159,12 +182,30 @@ const CampaignCard = ({
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                isInvalid={!!errors.email}
+                isInvalid={submitted && !!errors.email}
               />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
+              {submitted && errors.email && (
+                <div className="text-danger small mt-1">{errors.email}</div>
+              )}
             </Form.Group>
+
+            <Form.Group className="mb-2" controlId="phone">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Your phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                isInvalid={submitted && !!errors.phone}
+              />
+              {submitted && errors.phone && (
+                <div className="text-danger small mt-1">{errors.phone}</div>
+              )}
+            </Form.Group>
+
+            {errors.api && (
+              <div className="text-danger small mt-2">{errors.api}</div>
+            )}
 
             <div className="d-flex justify-content-end mt-3">
               <Button variant="secondary" onClick={closeModal} className="me-2">
@@ -176,6 +217,20 @@ const CampaignCard = ({
             </div>
           </Form>
         </Modal.Body>
+      </Modal>
+
+      <Modal show={showSuccess} onHide={() => setShowSuccess(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Sign Up Successful</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Thank you for signing up! You will be contacted by email soon.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowSuccess(false)}>
+            OK
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Card>
   );

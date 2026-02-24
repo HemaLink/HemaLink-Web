@@ -26,6 +26,7 @@ import {
   cilAccountLogout,
   cilMoon,
   cilSun,
+  cilList,
 } from "@coreui/icons";
 
 const ROLE_LABELS = { 0: 'User', 1: 'Mod', 2: 'Admin' };
@@ -54,16 +55,28 @@ const Sidebar = () => {
         </CSidebarBrand>
       </CSidebarHeader>
       <CSidebarNav className="flex-grow-1 px-2">
-        <CNavItem>
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-          >
-            <CIcon icon={cilDrop} className="nav-icon" />
-            Donations
-          </NavLink>
-        </CNavItem>
+        {isAuthenticated && role === ROLES.REQUESTER ? (
+          <CNavItem>
+            <NavLink
+              to="/your-campaigns"
+              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+            >
+              <CIcon icon={cilList} className="nav-icon" />
+              Your Campaigns
+            </NavLink>
+          </CNavItem>
+        ) : (
+          <CNavItem>
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+            >
+              <CIcon icon={cilDrop} className="nav-icon" />
+              Donations
+            </NavLink>
+          </CNavItem>
+        )}
         {isAuthenticated && role >= ROLES.MODERATOR && (
           <>
             <CNavItem>

@@ -1,19 +1,31 @@
-import React, { useState, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import '../donors/donors.css';
 import EntityForm from './EntityForm';
 import DeleteConfirm from '../donors/DeleteConfirm';
-import { entities as initial } from '../../../data/entities';
+import { getRequesters, formatAdmissionStatus } from './entities.services';
 import AuthContext from '../../../services/authContext/AuthContext';
 import { ROLES } from '../../../services/authContext/auth.utils';
 
 const EntitiesTable = () => {
   const { isAuthenticated, role } = useContext(AuthContext);
   const isAdmin = isAuthenticated && role === ROLES.ADMIN;
-  const [items, setItems] = useState(initial);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [sortKey, setSortKey] = useState('name');
   const [sortDir, setSortDir] = useState('asc');
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    getRequesters()
+      .then((data) => { if (!cancelled) { setItems(data); setError(null); } })
+      .catch((err) => { if (!cancelled) setError(err.message); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   const toggleSort = (key) => {
     if (sortKey === key) {
@@ -58,18 +70,16 @@ const EntitiesTable = () => {
   const sorted = useMemo(() => {
     const copy = [...items];
     copy.sort((a, b) => {
-      let cmp = 0;
-      if (sortKey === 'createdAt') {
-        cmp = new Date(a.createdAt) - new Date(b.createdAt);
-      } else {
-        const valA = (a[sortKey] || '').toString().toLowerCase();
-        const valB = (b[sortKey] || '').toString().toLowerCase();
-        cmp = valA.localeCompare(valB);
-      }
+      const valA = (a[sortKey] || '').toString().toLowerCase();
+      const valB = (b[sortKey] || '').toString().toLowerCase();
+      const cmp = valA.localeCompare(valB);
       return sortDir === 'asc' ? cmp : -cmp;
     });
     return copy;
   }, [items, sortKey, sortDir]);
+
+  if (loading) return <p>Loading entities...</p>;
+  if (error) return <p className="text-danger">Error: {error}</p>;
 
   return (
     <div className="donors-container">
@@ -80,28 +90,20 @@ const EntitiesTable = () => {
             <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('name')}>
               Name{sortIndicator('name')}
             </th>
-            <th>Type</th>
-            <th>Contact</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('createdAt')}>
-              Created{sortIndicator('createdAt')}
+            <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => toggleSort('email')}>
+              Email{sortIndicator('email')}
             </th>
-            <th>Active</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((e) => (
-            <tr key={e.id} className={e.isActive ? '' : 'muted'}>
+            <tr key={e.id}>
               <td data-label="ID">{e.id}</td>
               <td data-label="Name">{e.name}</td>
-              <td data-label="Type">{e.type}</td>
-              <td data-label="Contact">{e.contact}</td>
-              <td data-label="Phone">{e.phone}</td>
-              <td data-label="Address">{e.address}</td>
-              <td data-label="Created">{e.createdAt}</td>
-              <td data-label="Active">{e.isActive ? 'Yes' : 'No'}</td>
+              <td data-label="Email">{e.email}</td>
+              <td data-label="Status">{formatAdmissionStatus(e.admissionStatus)}</td>
               <td>
                 <button className="btn small" onClick={() => handleEdit(e)}>
                   Edit

@@ -15,6 +15,7 @@ import {
   cilAccountLogout,
   cilMoon,
   cilSun,
+  cilList,
 } from "@coreui/icons";
 
 import "./BottomNavBar.css";
@@ -30,15 +31,26 @@ const BottomNavBar = () => {
   return (
     <nav className="bottom-nav-bar noselect">
       <div className="nav-items">
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-          title="Donations"
-        >
-          <CIcon icon={cilDrop} className="nav-icon" />
-          <span className="nav-label">Donations</span>
-        </NavLink>
+        {isAuthenticated && role === ROLES.REQUESTER ? (
+          <NavLink
+            to="/your-campaigns"
+            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+            title="Your Campaigns"
+          >
+            <CIcon icon={cilList} className="nav-icon" />
+            <span className="nav-label">Your Campaigns</span>
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+            title="Donations"
+          >
+            <CIcon icon={cilDrop} className="nav-icon" />
+            <span className="nav-label">Donations</span>
+          </NavLink>
+        )}
         {isAuthenticated && role >= ROLES.MODERATOR && (
           <>
             <NavLink

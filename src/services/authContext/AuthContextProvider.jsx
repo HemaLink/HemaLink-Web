@@ -82,6 +82,7 @@ const AuthContextProvider = ({ children }) => {
     setRole(null);
     setIsAuthenticated(false);
     window.localStorage.removeItem(TOKEN_KEY);
+    window.location.href = "/";
   };
 
   return (
